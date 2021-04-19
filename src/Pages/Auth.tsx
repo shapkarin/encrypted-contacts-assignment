@@ -6,7 +6,10 @@ import { exist, create, check, } from '../Actions/user';
 
 @connect
 class Auth extends Component {
-  static mapStateToProps = ({ user }) => ({ user });
+  static mapStateToProps = ({ user: { authed, error } }) => ({
+    authed,
+    error
+  });
 
   static mapDispatchToProps = {
     addUser: create,
@@ -14,13 +17,13 @@ class Auth extends Component {
   }
 
   // static propTypes = {
-  //   user: PropTypes.boolean.isRequired,
+  //   authed: PropTypes.boolean.isRequired,
   // }
 
   state = {
     alive: false,
     isFirstRun: true,
-    hasUser: this.props.user
+    hasUser: this.props.authed
   }
 
   componentDidMount() {
@@ -28,8 +31,8 @@ class Auth extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.user !== nextProps.user) {
-      this.setState({ hasUser: nextProps.user });
+    if (this.props.authed !== nextProps.authed) {
+      this.setState({ hasUser: nextProps.authed });
     }
   }
 
@@ -44,19 +47,15 @@ class Auth extends Component {
 
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;
-    const { history: { push: navigate }, addUser, checkUser } = this.props;
+    const { history: { push: navigate }, addUser, checkUser, error } = this.props;
 
-    try {
-      if (isFirstRun) {
-        await addUser(password);
-      } else {
-        await checkUser(password);
-      }
-      if (this.state.hasUser) {
-        navigate('/contacts');
-      }
-    } catch (err) {
-      console.log(err);
+    if (isFirstRun) {
+      await addUser(password);
+    } else {
+      await checkUser(password);
+    }
+    if (this.state.hasUser) {
+      navigate('/contacts');
     }
   }
 
@@ -73,6 +72,7 @@ class Auth extends Component {
           <input id="password" type='password'/>
           <button type="submit">Send</button>
         </form>
+        {this.props.error.length > 0 && <div>{ this.props.error }</div>}
       </div>
     )
   };

@@ -3,11 +3,21 @@ import { normalize, schema } from 'normalizr';
 
 import { actions } from '../Actions/user';
 
-const { create, check } = actions;
+const { create, check, error } = actions;
 
 export default handleActions(
   {
-    [create]: () => ( true ),
-    [check]: (_, { payload: status }) => ( status ),
-  }, false
+    [create]: (state) => ({
+      ...state,
+      authed: true
+    }),
+    [check]: (state, { payload: status }) => ({
+      error: status ? '' : state.error,
+      authed: status,
+    }),
+    [error]: (state, { payload }) => ({
+      ...state,
+      error: payload
+    }),
+  }, { authed: false, error: '' }
 );

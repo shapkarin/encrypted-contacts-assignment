@@ -14,12 +14,10 @@ export default function() {
   const User = new Datastore({
     filename: path.join(__dirname, '../../db/user.db'),
     autoload: true,
-    timestampData: true,
   });
   const Contacts = new Datastore({
     filename: path.join(__dirname, '../../db/contacts.db'),
     autoload: true,
-    timestampData: true,
   });
 
   var key  = fs.readFileSync('sslcert/localhost.key', 'utf8');

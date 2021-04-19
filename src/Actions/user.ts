@@ -6,6 +6,7 @@ import request from '../request';
 export const actions = {
   create: createAction('user/CREATE'),
   check: createAction('user/CHECK'),
+  error: createAction('user/ERROR'),
 };
 
 // todo: move at one place only
@@ -29,10 +30,10 @@ export const check = (password) => async (dispatch) => {
       headers,
       body: JSON.stringify({ password }),
     });
-    await dispatch(actions.check(true));
-    // console.log(getState());
+    dispatch(actions.check(true));
   } catch {
-    await dispatch(actions.check(false));
+    dispatch(actions.error('The password is incorrect'));
+    dispatch(actions.check(false));
   }
 };
 

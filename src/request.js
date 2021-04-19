@@ -1,3 +1,4 @@
+// todo: refact
 export default (url, ...args) => (
   fetch(url, ...args).then((res) => {
     if (!res) throw new Error('Responce object is undefined');
