@@ -37,6 +37,10 @@ export default function() {
 
       const { cookies: { password } } = req;
 
+      console.log('-----PASSWORD-----');
+      console.log(password);
+      console.log('-----PASSWORD-----');
+
       if(!password) return res.sendStatus(400);
 
       try {

@@ -22,17 +22,17 @@ export const create = (password) => async (dispatch) => {
   dispatch(actions.create());
 };
 
-export const check = (password) => async (dispatch, getState) => {
+export const check = (password) => async (dispatch) => {
   try {
     await request(`${domain}/api/user/auth`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ password }),
     });
-    dispatch(actions.check(true));
-    console.log(getState());
+    await dispatch(actions.check(true));
+    // console.log(getState());
   } catch {
-    dispatch(actions.check(false));
+    await dispatch(actions.check(false));
   }
 };
 
@@ -44,11 +44,4 @@ export const exist = async () => {
     console.log({err});
     return false;
   }
-};
-
-export const addTodo = () => {
-  return (dispatch, getState) => {
-    dispatch(actions.check(true));
-    console.log(getState());
-  };
 };

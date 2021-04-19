@@ -42,7 +42,10 @@ if (
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
+  const extensions = [
+    'REACT_DEVELOPER_TOOLS',
+    // 'REDUX_DEVTOOLS'
+  ];
 
   return installer
     .default(

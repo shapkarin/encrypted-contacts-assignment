@@ -10,7 +10,8 @@ export const actions = {
 }
 
 const headers = { 'Content-Type': 'application/json' };
-const domain = 'https://localhost:3042'
+// todo: move at one place only
+const domain = 'https://localhost:3042';
 
 export const create = (contact) => async (dispatch) => {
   const newContact = await request(`${domain}/api/contacts`, {
@@ -38,8 +39,7 @@ export const remove = (id) => async (dispatch) => {
   dispatch(actions.remove(id));
 };
 
-export const load = () => (dispatch) => {
-  // const contacts = await request(`${domain}/api/contacts/`);
-  const contacts = [1,2,3];
+export const load = () => async (dispatch) => {
+  const contacts = await request(`${domain}/api/contacts/`);
   dispatch(actions.load(contacts));
 };

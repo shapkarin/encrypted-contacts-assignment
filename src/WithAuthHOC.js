@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import connect from 'react-redux-connect';
+import { withRouter } from 'react-router-dom'
 
 export default function(ComposedComponent) {
     @connect
@@ -9,10 +10,12 @@ export default function(ComposedComponent) {
         authenticated: user,
       });
 
-      componentWillMount() {
-          if(!this.props.authenticated) {
-            this.props.history.push('/')
-          }
+      componentDidMount() {
+        console.log({ user: this.props.authenticated })
+        if(!this.props.authenticated) {
+          // this.props.history.push('/')
+          console.log('Please auth');
+        }
       }
 
       render() {

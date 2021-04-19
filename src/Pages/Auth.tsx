@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom'
 import connect from 'react-redux-connect';
 
-import { exist, create, check, addTodo } from '../Actions/user';
+import { exist, create, check, } from '../Actions/user';
 
 @connect
-class Auth extends Component {
+class Auth extends PureComponent {
   static mapStateToProps = ({ user }) => ({ user });
 
-  static mapDispatchToProps = (dispatch) => ({
-    addUser: () => create(),
-    checkUser: (pass) => dispatch(check(pass)),
-    onAddTodo: todo => {
-      dispatch(addTodo(todo));
-    }
-  })
+  static mapDispatchToProps = {
+    addUser: create,
+    checkUser: check,
+  }
 
   // static propTypes = {
   //   contacts: PropTypes.array.isRequired,
@@ -23,32 +20,43 @@ class Auth extends Component {
   state = {
     alive: false,
     isFirstRun: true,
+    hasUser: this.props.user
   }
 
   componentDidMount() {
-    this.props.onAddTodo();
     this.checkIfFirstRun();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user !== nextProps.user) {
+      this.setState({ hasUser: nextProps.user });
+    }
+  }
+
   checkIfFirstRun = async () => {
+
     const isExist = await exist();
     this.setState({ isFirstRun: !isExist, alive: true });
   }
+
 
   handleSubmit = async (event, isFirstRun) => {
 
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;
-    const { history: { push: navigate }, user, addUser, checkUser } = this.props;
+    const { history: { push: navigate }, addUser, checkUser } = this.props;
 
-    if (isFirstRun) {
-      await addUser(password);
-    } else if (!isFirstRun) {
-      await checkUser(password);
-    }
-
-    if (user) {
-      navigate('/contacts');
+    try {
+      if (isFirstRun) {
+        await addUser(password);
+      } else {
+        await checkUser(password);
+      }
+      if (this.state.hasUser) {
+        navigate('/contacts');
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 

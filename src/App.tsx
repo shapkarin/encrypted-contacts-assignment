@@ -14,7 +14,8 @@ export default function App() {
       <Router history={createBrowserHistory()}>
         <Switch>
           <Route path="/" component={Auth} />
-          <Route path="/contacts" component={WithAuth(Contacts)} />
+          {/* <Route path="/contacts" component={WithAuth(Contacts)} /> */}
+          <Route path="/contacts" component={Contacts} />
         </Switch>
       </Router>
     </Provider>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import connect from 'react-redux-connect';
 
 import { load } from '../Actions/contact';
@@ -7,20 +6,21 @@ import { load } from '../Actions/contact';
 @connect
 class Contacts extends Component {
   static mapDispatchToProps = {
-    getContacts: load,
+    load,
   }
 
   static mapStateToProps = ({ contacts }) => ({
-    contacts: Object.keys(contacts).map(key => contacts[key]).sort((a, b) => a.name - b.name),
+    contacts: [] // Object.keys(contacts).map(key => contacts[key]).sort((a, b) => a.name - b.name),
   })
 
-  // static propTypes = {
-  //   contacts: PropTypes.array.isRequired,
-  // }
+  componentDidMount() {
+    this.props.load();
+  }
 
   render () {
     return (
       <div>
+        qaskd;mas;kda;ksdk;
         { this.props.contacts.map(contact => (
           <div>{ JSON.stringify(contact) }</div>
         )) }
@@ -28,3 +28,5 @@ class Contacts extends Component {
     )
   }
 }
+
+export default Contacts;
