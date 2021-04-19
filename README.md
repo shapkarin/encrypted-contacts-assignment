@@ -1,5 +1,3 @@
-Hello.
-
 Start the app:
 You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. Please follow the https://letsencrypt.org/ru/docs/certificates-for-localhost/
 ```sh
@@ -20,3 +18,9 @@ This app can be grow in web service. The currently for that needed:
 - separate contacts by users
 - add HMAC because the data now goes throw the https and the global network
 - ? also maybe it's a good idea to encrypt the data at the client side and send throw the network only the encrypted version
+
+
+Should to be added:
+- Types
+- More tests
+- Styles

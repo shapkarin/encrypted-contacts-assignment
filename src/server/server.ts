@@ -4,7 +4,6 @@ export default function() {
   const https = require('https');
   const app = express();
   const cookieParser = require('cookie-parser')
-  const jsonParser = express.json();
   const fs = require('fs');
   const bodyParser = require('body-parser')
   const { promisify } = require('util');
@@ -37,21 +36,16 @@ export default function() {
 
       const { cookies: { password } } = req;
 
-      console.log('-----PASSWORD-----');
-      console.log(password);
-      console.log('-----PASSWORD-----');
-
       if(!password) return res.sendStatus(400);
 
-      try {
-        const contacts = await Contacts.asyncFind({})
+      Contacts.find({}, async function (err, contacts) {
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+        }
         const decrypted = contacts.map(contact => decrypt(contact, password));
-
         res.send(decrypted);
-      } catch(err) {
-        console.log(err);
-        res.sendStatus(500);
-      }
+      });
   });
 
   app.get('/api/contacts/:id', async function(req, res) {
@@ -61,7 +55,7 @@ export default function() {
       if(!id && !password) return res.sendStatus(400);
 
       try {
-        const contact = await Contacts.asyncFindOne({_id: id});
+        const contact = await Contacts.FindOne({_id: id});
         const decrypted = decrypt(contact, password);
 
         res.send(decrypted);
@@ -70,20 +64,22 @@ export default function() {
       }
   });
 
-  app.post('/api/contacts', jsonParser, async function (req, res) {
+  app.post('/api/contacts', function (req, res) {
 
       const { body: { contact }, cookies: { password } } = req;
 
       if(!contact && !password) return res.sendStatus(400);
 
-      try {
         const hash = encrypt(JSON.stringify(contact), password);
 
-        await Contacts.asyncInsert({ hash });
-        res.send(contact);
-      } catch(err) {
-        console.log(err);
-      }
+        Contacts.insert({ hash }, function (err) {
+          if (err) {
+            console.log(err);
+            res.sendStatus(500);
+          }
+          res.send(contact);
+        });
+
   });
 
   app.delete('/api/contacts/:id', async function(req, res){
@@ -101,7 +97,7 @@ export default function() {
       }
   });
 
-  app.put('/api/contacts/:id', jsonParser, async function(req, res) {
+  app.put('/api/contacts/:id', async function(req, res) {
 
       const { body: { contact }, params: { id }, cookies: { password } } = req;
 
