@@ -20,15 +20,14 @@ npm start
 - To manipulate the data it used node express server and CRUD API
 - Tests are at `src/__tests__/App.test.tsx`;
 
-To protect contacts more I decide to store all contacts fields and it's data in encypted format, so there will be harder to get for example the phone that contains only the digits.
-
 
 This app can be grow in web service. The currently for that needed:
 - separate contacts by users
 - add HMAC because the data now goes throw the https and the global network
 
-Should to be added:
+Improvements:
 - Types
 - More tests
 - Styles
 - Edit the contact (redux and API endpoint are ready, UI needs to be added)
+- Store each value at it's not encypted fields (key) name to add an at least search
