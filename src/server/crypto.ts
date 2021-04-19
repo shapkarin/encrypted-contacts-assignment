@@ -2,6 +2,7 @@ const crypto = require('crypto');
 
 const algorithm = 'aes-256-ctr';
 const global_salt = 'aa77f7c2b195d775597223bb54e6ecfe';
+// not sure about that part
 const key = (password) => crypto.createHash('sha256').update(String(password + global_salt)).digest('base64').substr(0, 32);
 
 const encrypt = (text, password) => {
