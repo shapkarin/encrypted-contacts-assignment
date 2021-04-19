@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import connect from 'react-redux-connect';
 import { withRouter } from 'react-router-dom'
 
-import { load, create } from '../Actions/contact';
+import { load, create, update, remove } from '../Actions/contact';
 
 @connect
 class Contacts extends Component {
   static mapDispatchToProps = {
     load,
-    create
+    create,
+    update,
+    remove
   }
 
   static mapStateToProps = ({ contacts }) => ({
@@ -31,7 +33,9 @@ class Contacts extends Component {
         }
       }
     } = event;
-    this.props.create({ name, phone, email, address });
+    const { create, load } = this.props;
+
+    create({ name, phone, email, address });
   }
 
   render () {
@@ -39,10 +43,14 @@ class Contacts extends Component {
       <div>
         <div>
           { this.props.contacts.map(contact => (
-            <div>{ JSON.stringify(contact) }</div>
+            <div>
+              { JSON.stringify(contact) }<br/>
+              <button onClick={() => console.log('todo, action and endpoint are ready')}>Edit</button>
+              <button onClick={() => this.props.remove(contact.id)}>Remove</button>
+            </div>
           )) }
         </div>
-        <button>Edit</button>
+
         <form onSubmit={this.create}>
           name: <input id="name" type='text'/><br/>
           phone: <input id="phone" type='text'/><br/>

@@ -22,7 +22,7 @@ export default handleActions(
 
     [remove]: (state, { payload: id }) => {
       const newState = { ...state };
-      delete newState.contacts[id];
+      delete newState[id];
       return newState;
     },
 

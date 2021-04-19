@@ -43,8 +43,10 @@ export default function() {
           console.log(err);
           res.sendStatus(500);
         }
-        console.log(contacts);
-        const decrypted = contacts.map(({ hash }) => decrypt(JSON.stringify(hash), password));
+        const decrypted = contacts.map(({ hash, _id }) => ({
+          ...JSON.parse(decrypt(hash, password)),
+          id: _id,
+        }));
         res.send(decrypted);
       });
   });
