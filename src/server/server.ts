@@ -60,7 +60,7 @@ export default function() {
       Contacts.FindOne({_id: id}, function (err, doc) {
         if (err) console.log(err);
 
-        const decrypted = decrypt(contact, password);
+        const decrypted = decrypt(contact.hash, password);
         res.send(decrypted);
       });
   });
