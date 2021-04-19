@@ -20,11 +20,9 @@ To protect contacts more I decide to store all contacts fields and it's data in 
 This app can be grow in web service. The currently for that needed:
 - separate contacts by users
 - add HMAC because the data now goes throw the https and the global network
-- ? also maybe it's a good idea to encrypt the data at the client side and send throw the network only the encrypted version
-
 
 Should to be added:
 - Types
 - More tests
 - Styles
-- Edit the contact (redux and endpoint are ready, UI needs to be added)
+- Edit the contact (redux and API endpoint are ready, UI needs to be added)
