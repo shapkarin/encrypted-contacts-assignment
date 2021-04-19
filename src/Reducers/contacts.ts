@@ -3,16 +3,16 @@ import { normalize, schema } from 'normalizr';
 
 import { actions } from '../Actions/contact';
 
-const { create, update, remove, loading } = actions;
+const { create, update, remove, load } = actions;
 
 export default handleActions(
   {
-    create: (contacts, { payload: contact }) => ({
+    [create]: (contacts, { payload: contact }) => ({
       ...contacts,
       [contact.id]: contact
     }),
 
-    update: (contacts, { payload: contact }) => ({
+    [update]: (contacts, { payload: contact }) => ({
       ...contacts,
       [contact.id]: {
         ...contacts[contact.id],
@@ -20,13 +20,13 @@ export default handleActions(
       }
     }),
 
-    remove: (state, { payload: id }) => {
+    [remove]: (state, { payload: id }) => {
       const newState = { ...state };
       delete newState.contacts[id];
       return newState;
     },
 
-    load: (contacts, { payload }) => {
+    [load]: (contacts, { payload }) => {
       const schem = new schema.Entity('collection');
       const { entities: { collection } } = normalize(payload, [schem]);
 

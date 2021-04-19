@@ -7,7 +7,7 @@ const { create, check } = actions;
 
 export default handleActions(
   {
-    create: () => ( true ),
-    check: (_, { payload: status }) => ( status ),
+    [create]: () => ( true ),
+    [check]: (_, { payload: status }) => ( status ),
   }, false
 );

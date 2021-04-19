@@ -2,16 +2,19 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import connect from 'react-redux-connect';
 
-import { exist, create, check } from '../Actions/user';
+import { exist, create, check, addTodo } from '../Actions/user';
 
 @connect
 class Auth extends Component {
   static mapStateToProps = ({ user }) => ({ user });
 
-  static mapDispatchToProps = {
-    addUser: create,
-    checkUser: check,
-  }
+  static mapDispatchToProps = (dispatch) => ({
+    addUser: () => create(),
+    checkUser: (pass) => dispatch(check(pass)),
+    onAddTodo: todo => {
+      dispatch(addTodo(todo));
+    }
+  })
 
   // static propTypes = {
   //   contacts: PropTypes.array.isRequired,
@@ -23,6 +26,7 @@ class Auth extends Component {
   }
 
   componentDidMount() {
+    this.props.onAddTodo();
     this.checkIfFirstRun();
   }
 
@@ -32,6 +36,7 @@ class Auth extends Component {
   }
 
   handleSubmit = async (event, isFirstRun) => {
+
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;
     const { history: { push: navigate }, user, addUser, checkUser } = this.props;
