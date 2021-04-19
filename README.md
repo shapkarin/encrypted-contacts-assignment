@@ -7,6 +7,10 @@ Start the app:
 You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. Please follow the https://letsencrypt.org/ru/docs/certificates-for-localhost/
 ```sh
 npm run start:renderer
+# or
+yarn start:renderer
+# or
+npm start
 ```
 
 - Password is not sotred anywhere like a string, only at httpOnly cookie while a session
