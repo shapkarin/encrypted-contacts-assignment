@@ -4,20 +4,20 @@ import { withRouter } from 'react-router-dom'
 
 import { load, create, update, remove } from '../Actions/contact';
 
-// todo: just fast implementation
-const Editable = (props) => {
-  const [edit, setEdit] = useState(false);
-  const handleClick = () => {
-    setEdit(!edit);
-    // const text = refs.textarea.innerHTML;
-    // this.props.save();
-  };
+// // todo: just fast implementation
+// const Editable = (props) => {
+//   const [edit, setEdit] = useState(false);
+//   const handleClick = () => {
+//     setEdit(!edit);
+//     // const text = refs.textarea.innerHTML;
+//     // this.props.save();
+//   };
 
-  return <div>
-    <div contenteditable={edit}>{ JSON.stringify(props.contact) }</div>
-    <button onClick={handleClick}>{ !edit ? 'Edit' : 'Save' }</button>
-  </div>
-}
+//   return <div>
+//     <div contenteditable={edit}>{ JSON.stringify(props.contact) }</div>
+//     <button onClick={handleClick}>{ !edit ? 'Edit' : 'Save' }</button>
+//   </div>
+// };
 
 @connect
 class Contacts extends Component {
@@ -59,9 +59,8 @@ class Contacts extends Component {
         <div>
           { this.props.contacts.map(contact => (
             <div>
-              {/* <div >{  }<div> */}
-              {/* <button onClick={() => console.log('todo, action and endpoint are ready')}>Edit</button> */}
-              <Editable contact={JSON.stringify(contact)} save={this.props.update} />
+              <div> { JSON.stringify(contact) } </div>
+              <button onClick={() => console.log('todo, action and endpoint are ready')}>Edit</button>
               <button onClick={() => this.props.remove(contact.id)}>Remove</button>
             </div>
           )) }
