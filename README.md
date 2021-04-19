@@ -1,5 +1,7 @@
-install: 
+Install: 
+```sh
 yarn install
+```
 
 Start the app:
 You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. Please follow the https://letsencrypt.org/ru/docs/certificates-for-localhost/
