@@ -25,6 +25,7 @@ This app can be grow in web service. The currently for that needed:
 - separate contacts by users
 - add HMAC because the data now goes throw the https and the global network
 - responced data data at create and update can be replaced with only statuses
+- change db
 
 Improvements:
 - Types
