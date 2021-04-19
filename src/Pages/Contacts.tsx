@@ -14,7 +14,7 @@ class Contacts extends Component {
   })
 
   componentDidMount() {
-    this.props.load();
+    // this.props.load();
   }
 
   render () {

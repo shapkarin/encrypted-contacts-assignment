@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import connect from 'react-redux-connect';
 
 import { exist, create, check, } from '../Actions/user';
 
 @connect
-class Auth extends PureComponent {
+class Auth extends Component {
   static mapStateToProps = ({ user }) => ({ user });
 
   static mapDispatchToProps = {
@@ -14,7 +14,7 @@ class Auth extends PureComponent {
   }
 
   // static propTypes = {
-  //   contacts: PropTypes.array.isRequired,
+  //   user: PropTypes.boolean.isRequired,
   // }
 
   state = {
