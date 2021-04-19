@@ -16,6 +16,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
+import server from './server';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -77,7 +79,7 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/../index.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -130,3 +132,10 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
+
+app.on('ready', function() {
+  server();
+});
+
+// added because I can't spend so much time to get in used with certificates
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
