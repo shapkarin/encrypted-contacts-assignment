@@ -8,16 +8,17 @@ export default function() {
   const fs = require('fs');
   const bodyParser = require('body-parser')
   const { promisify } = require('util');
+  const path = require('path');
 
-  const { encrypt, decrypt } = require('./crypto');
+  const { encrypt, decrypt, pass } = require('./crypto');
 
   const User = new Datastore({
-    filename: '../../user.db',
+    filename: path.join(__dirname, '../../db/user.db'),
     autoload: true,
     timestampData: true,
   });
   const Contacts = new Datastore({
-    filename: '../../contacts.db',
+    filename: path.join(__dirname, '../../db/contacts.db'),
     autoload: true,
     timestampData: true,
   });
@@ -28,6 +29,7 @@ export default function() {
   app.use(express.static(__dirname + '/public'));
   app.use(cookieParser());
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
   var httpsServer = https.createServer({ key, cert }, app);
 
@@ -111,50 +113,54 @@ export default function() {
       }
   });
 
-  app.post('/api/user', async function(req, res){
+  app.post('/api/user', function(req, res){
 
       const { body: { password } } = req;
 
       if(!password) return res.sendStatus(400);
 
-      try {
-        const hash = encrypt(password);
+      const { content: hash } = pass(password);
 
-        await User.insert({ hash });
-        res
-          .cookie('password', password,
-            {
-              maxAge: 900000, // ?
-              secure: true,
-              httpOnly: true,
-              // signed: true,
-          })
-          .sendStatus(201);
-      } catch(err) {
-        console.log(err);
-      }
+      User.insert({ hash }, function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res
+            .cookie('password', password,
+              {
+                maxAge: 900000, // ?
+                secure: true,
+                httpOnly: true,
+                // signed: true,
+            })
+            .sendStatus(201);
+        }
+      });
   });
 
-  app.get('/api/user', async function(req, res){
+  app.post('/api/user/auth', function(req, res){
 
     const { body: { password } } = req;
 
     if(!password) return res.sendStatus(400);
 
-    try {
-      const hash = encrypt(password);
+    const { content: hash } = pass(password);
 
-      await User.findOne({ hash });
-      res
-        .cookie('password', password, {
-          maxAge: 900000,
-          secure: true,
-          httpOnly: true,
-        })
-        .sendStatus(200);
-    } catch(err) {
-      console.log(err);
-    }
+    User.findOne({ hash }, function (err, doc) {
+      if (err) console.log(err);
+
+      if(doc) {
+        res
+          .cookie('password', password, {
+            maxAge: 900000,
+            secure: true,
+            httpOnly: true,
+          })
+          .sendStatus(200);
+      } else {
+        res.sendStatus(404);
+      }
+    });
 
   });
 

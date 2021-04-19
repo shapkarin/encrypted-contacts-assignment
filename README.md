@@ -4,6 +4,8 @@ To protect contacts more I decide to store all contacts fields and it's data in 
 
 You need to generate sertificates and place it to the sslcert to make an app works well. Please follow the https://letsencrypt.org/ru/docs/certificates-for-localhost/
 
+Tests are at `src/__tests__/App.test.tsx`;
+
 This app can be grow in web service. The currently for that needed:
 - add users and sessions, separate contacts by users
 - add HMAC because the data now goes throw the https and the global network

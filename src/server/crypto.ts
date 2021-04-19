@@ -1,14 +1,13 @@
 const crypto = require('crypto');
 
 const algorithm = 'aes-256-ctr';
-const password = 'vOVH6sdmpNWjRRIqCc7rdxs01lwHzfr3';
-const global_salt = '';
-const iv = crypto.randomBytes(16);
+const global_salt = 'aa77f7c2b195d775597223bb54e6ecfe';
 
+// not a good idea to use static iv
 const encrypt = (text) => {
 
-    const cipher = crypto.createCipheriv(algorithm, password + global_salt, iv);
-
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(algorithm, global_salt, iv);
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
 
     return {
@@ -17,16 +16,39 @@ const encrypt = (text) => {
     };
 };
 
-const decrypt = (hash) => {
+const decrypt = (hash, text) => {
 
-    const decipher = crypto.createDecipheriv(algorithm, password, Buffer.from(hash.iv, 'hex'));
-
+    const decipher = crypto.createDecipheriv(algorithm, global_salt, Buffer.from(hash.iv, 'hex'));
     const decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
 
     return decrpyted.toString();
 };
 
+const scrypt = {
+  create: async (password) => (
+    new Promise((resolve, reject) => {
+      const salt = crypto.randomBytes(16).toString("hex")
+
+      crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+          if (err) reject(err);
+          resolve(salt + ":" + derivedKey.toString('hex'))
+      });
+    })
+  ),
+  verify: async (password, hash) => (
+    new Promise((resolve, reject) => {
+        const [ salt, key ] = hash.split(":")
+        crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+            if (err) reject(err);
+            resolve(key == derivedKey.toString('hex'))
+        });
+    })
+  )
+}
+
+
 module.exports = {
     encrypt,
-    decrypt
+    decrypt,
+    scrypt
 };

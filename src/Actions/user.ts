@@ -9,12 +9,14 @@ export const actions = {
 };
 
 // todo: move at one place only
-const domain = 'https://localhost:3042'
+const domain = 'https://localhost:3042';
+
+const headers = { 'Content-Type': 'application/json' };
 
 export const create = (password) => async (dispatch) => {
   await request(`${domain}/api/user`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({ password }),
   });
   dispatch(actions.create());
@@ -22,7 +24,11 @@ export const create = (password) => async (dispatch) => {
 
 export const check = (password) => async (dispatch) => {
   try {
-    await request(`${domain}/api/user`);
+    await request(`${domain}/api/user/auth`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ password }),
+    });
     dispatch(actions.check(true));
   } catch {
     dispatch(actions.check(false));

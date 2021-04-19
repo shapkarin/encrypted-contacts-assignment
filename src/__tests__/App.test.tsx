@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
 import App from '../App';
-import { encrypt, decrypt } from '../server/crypto';
+import { encrypt, decrypt, scrypt } from '../server/crypto';
 import { create, update, remove } from '../Actions';
 
 describe('App', () => {
@@ -13,26 +13,28 @@ describe('App', () => {
 
   const data = 'Some data';
   const hash = encrypt(data);
+  const decrypted = decrypt(hash);
 
   it('should encrypt the data', () => {
-    const hash = encrypt(data);
-
     expect(data).not.toBe(hash.content)
   });
 
   it('should decrypt the data', () => {
-    const decrypted = decrypt(hash);
-
     expect(data).toBe(decrypted);
   });
 
-  // it('should to create a new contact', () => {
-  // });
+  const password = '1234567890';
 
-  // it('should to edit a contact', () => {
-  // });
+  it('should create a password hash with scrypt that not equals the input', async () => {
+    const scrypt_hash = await scrypt.create(password);
+    expect(password).not.toBe(scrypt_hash)
+  });
 
-  // it('should to delete a contact', () => {
-  // });
+  it('should verify the password with hash', async () => {
+    const scrypt_hash = await scrypt.create(password);
+    const isFound = await scrypt.verify(password, scrypt_hash);
+
+    expect(isFound).toBe(true);
+  });
 
 });
