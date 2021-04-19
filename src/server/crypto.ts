@@ -2,12 +2,12 @@ const crypto = require('crypto');
 
 const algorithm = 'aes-256-ctr';
 const global_salt = 'aa77f7c2b195d775597223bb54e6ecfe';
+const key = (password) => crypto.createHash('sha256').update(String(password + global_salt)).digest('base64').substr(0, 32);
 
-// not a good idea to use static iv
-const encrypt = (text) => {
+const encrypt = (text, password) => {
 
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(algorithm, global_salt, iv);
+    const cipher = crypto.createCipheriv(algorithm, key(password), iv);
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
 
     return {
@@ -16,9 +16,9 @@ const encrypt = (text) => {
     };
 };
 
-const decrypt = (hash, text) => {
+const decrypt = (hash, password) => {
 
-    const decipher = crypto.createDecipheriv(algorithm, global_salt, Buffer.from(hash.iv, 'hex'));
+    const decipher = crypto.createDecipheriv(algorithm, key(password), Buffer.from(hash.iv, 'hex'));
     const decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
 
     return decrpyted.toString();

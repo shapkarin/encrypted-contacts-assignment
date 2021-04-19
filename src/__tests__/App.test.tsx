@@ -12,8 +12,9 @@ describe('App', () => {
   });
 
   const data = 'Some data';
-  const hash = encrypt(data);
-  const decrypted = decrypt(hash);
+  const pass = '1234567890';
+  const hash = encrypt(data, pass);
+  const decrypted = decrypt(hash, pass);
 
   it('should encrypt the data', () => {
     expect(data).not.toBe(hash.content)
