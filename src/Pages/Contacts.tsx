@@ -1,8 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import connect from 'react-redux-connect';
 import { withRouter } from 'react-router-dom'
 
 import { load, create, update, remove } from '../Actions/contact';
+
+// todo: just fast implementation
+const Editable = (props) => {
+  const [edit, setEdit] = useState(false);
+  const handleClick = () => {
+    setEdit(!edit);
+    // const text = refs.textarea.innerHTML;
+    // this.props.save();
+  };
+
+  return <div>
+    <div contenteditable={edit}>{ JSON.stringify(props.contact) }</div>
+    <button onClick={handleClick}>{ !edit ? 'Edit' : 'Save' }</button>
+  </div>
+}
 
 @connect
 class Contacts extends Component {
@@ -44,8 +59,9 @@ class Contacts extends Component {
         <div>
           { this.props.contacts.map(contact => (
             <div>
-              { JSON.stringify(contact) }<br/>
-              <button onClick={() => console.log('todo, action and endpoint are ready')}>Edit</button>
+              {/* <div >{  }<div> */}
+              {/* <button onClick={() => console.log('todo, action and endpoint are ready')}>Edit</button> */}
+              <Editable contact={JSON.stringify(contact)} save={this.props.update} />
               <button onClick={() => this.props.remove(contact.id)}>Remove</button>
             </div>
           )) }

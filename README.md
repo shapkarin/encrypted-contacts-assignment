@@ -24,3 +24,4 @@ Should to be added:
 - Types
 - More tests
 - Styles
+- Edit the contact (redux and endpoint are ready, UI needs to be added)
