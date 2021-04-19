@@ -8,9 +8,7 @@ import Contacts from './Pages/Contacts';
 import Auth from './Pages/Auth';
 import WithAuth from './WithAuthHOC';
 
-const history = createHashHistory({
-  basename: window.location.pathname
-});
+const history = createHashHistory();
 
 export default function App() {
   return (
