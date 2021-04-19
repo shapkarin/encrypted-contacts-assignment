@@ -32,13 +32,13 @@ export default function() {
 
   var httpsServer = https.createServer({ key, cert }, app);
 
-  app.get('/api/contacts', async function(req, res) {
+  app.get('/api/contacts', function(req, res) {
 
       const { cookies: { password } } = req;
 
       if(!password) return res.sendStatus(400);
 
-      Contacts.find({}, async function (err, contacts) {
+      Contacts.find({}, function (err, contacts) {
         if (err) {
           console.log(err);
           res.sendStatus(500);
@@ -48,20 +48,18 @@ export default function() {
       });
   });
 
-  app.get('/api/contacts/:id', async function(req, res) {
+  app.get('/api/contacts/:id', function(req, res) {
 
       const { params: { id }, cookies: { password } } = req;
 
       if(!id && !password) return res.sendStatus(400);
 
-      try {
-        const contact = await Contacts.FindOne({_id: id});
-        const decrypted = decrypt(contact, password);
+      Contacts.FindOne({_id: id}, function (err, doc) {
+        if (err) console.log(err);
 
+        const decrypted = decrypt(contact, password);
         res.send(decrypted);
-      } catch(err) {
-        console.log(err);
-      }
+      });
   });
 
   app.post('/api/contacts', function (req, res) {
@@ -82,35 +80,31 @@ export default function() {
 
   });
 
-  app.delete('/api/contacts/:id', async function(req, res){
+  app.delete('/api/contacts/:id',  function(req, res){
 
       const { params: { id } } = req;
 
       if(!id) return res.sendStatus(400);
 
-      try {
-        await Contacts.remove({ _id: id })
+      Contacts.remove({ _id: id }, {}, function(err){
+        if (err) console.log(err);
+
         res.sendStatus(200);
-      } catch(err) {
-        console.log(err);
-        res.sendStatus(404);
-      }
+      });
   });
 
-  app.put('/api/contacts/:id', async function(req, res) {
+  app.put('/api/contacts/:id', function(req, res) {
 
       const { body: { contact }, params: { id }, cookies: { password } } = req;
 
       if(!body && !id && !password) return res.sendStatus(400);
 
-      try {
-        const hash = encrypt(contact, password);
+      const hash = encrypt(contact, password);
+      Contacts.update({_id: id}, { hash }, {}, function(err){
+        if (err) console.log(err);
 
-        await Contacts.update({_id: id}, { hash });
-        res.send(body);
-      } catch(err) {
-        console.log(err);
-      }
+        res.send(contact);
+      });
   });
 
   app.post('/api/user', async function(req, res){
