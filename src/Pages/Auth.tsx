@@ -23,7 +23,6 @@ class Auth extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.dispatch);
     this.checkIfFirstRun();
   }
 
