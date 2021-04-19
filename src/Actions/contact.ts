@@ -38,7 +38,8 @@ export const remove = (id) => async (dispatch) => {
   dispatch(actions.remove(id));
 };
 
-export const load = () => async (dispatch) => {
-  const contacts = await request(`${domain}/api/contacts/`);
+export const load = () => (dispatch) => {
+  // const contacts = await request(`${domain}/api/contacts/`);
+  const contacts = [1,2,3];
   dispatch(actions.load(contacts));
 };

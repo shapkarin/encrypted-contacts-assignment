@@ -10,7 +10,7 @@ class Auth extends Component {
 
   static mapDispatchToProps = {
     addUser: create,
-    checkUser: check
+    checkUser: check,
   }
 
   // static propTypes = {
@@ -23,6 +23,7 @@ class Auth extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.dispatch);
     this.checkIfFirstRun();
   }
 

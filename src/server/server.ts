@@ -10,7 +10,7 @@ export default function() {
   const { promisify } = require('util');
   const path = require('path');
 
-  const { encrypt, decrypt, pass } = require('./crypto');
+  const { encrypt, decrypt, scrypt } = require('./crypto');
 
   const User = new Datastore({
     filename: path.join(__dirname, '../../db/user.db'),
@@ -113,13 +113,13 @@ export default function() {
       }
   });
 
-  app.post('/api/user', function(req, res){
+  app.post('/api/user', async function(req, res){
 
       const { body: { password } } = req;
 
       if(!password) return res.sendStatus(400);
 
-      const { content: hash } = pass(password);
+      const hash = await scrypt.create(password);
 
       User.insert({ hash }, function (err) {
         if (err) {
@@ -128,7 +128,7 @@ export default function() {
           res
             .cookie('password', password,
               {
-                maxAge: 900000, // ?
+                maxAge: 900000,
                 secure: true,
                 httpOnly: true,
                 // signed: true,
@@ -144,24 +144,24 @@ export default function() {
 
     if(!password) return res.sendStatus(400);
 
-    const { content: hash } = pass(password);
-
-    User.findOne({ hash }, function (err, doc) {
-      if (err) console.log(err);
-
-      if(doc) {
-        res
-          .cookie('password', password, {
-            maxAge: 900000,
-            secure: true,
-            httpOnly: true,
-          })
-          .sendStatus(200);
-      } else {
-        res.sendStatus(404);
+    // not sure about that approach, but currently app has only one user because of it's UI
+    User.find({}, async function (err, users) {
+      for (let { hash } of users) {
+        const verified = await scrypt.verify(password, hash);
+          if(verified) {
+            res
+              .cookie('password', password, {
+                maxAge: 900000,
+                secure: true,
+                httpOnly: true,
+              })
+              .sendStatus(200);
+            break;
+          } else if(hash === users[users.length - 1].hash) {
+            res.sendStatus(404);
+          }
       }
-    });
-
+    })
   });
 
   // for the first version

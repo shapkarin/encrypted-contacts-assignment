@@ -33,7 +33,7 @@ export const check = (password) => async (dispatch) => {
   } catch {
     dispatch(actions.check(false));
   }
-}
+};
 
 export const exist = async () => {
   try {
@@ -43,4 +43,4 @@ export const exist = async () => {
     console.log({err});
     return false;
   }
-}
+};
