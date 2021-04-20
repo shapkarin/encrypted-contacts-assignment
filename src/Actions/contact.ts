@@ -32,7 +32,6 @@ export const update = (contact) => async (dispatch) => {
 };
 
 export const remove = (id) => async (dispatch) => {
-  console.log({ id });
   await request(`${domain}/api/contacts/${id}`, {
     method: 'DELETE',
     headers,
