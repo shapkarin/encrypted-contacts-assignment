@@ -66,7 +66,7 @@ class Auth extends Component {
 
     return (
       <div>
-        <h1>Welcome To Simple Secure Contact Manager</h1>
+        <h1>Welcome To The Simple Secure Contact Manager</h1>
         <h2>Please enter a password for your { isFirstRun && 'new' } contact data file</h2>
         <form onSubmit={(event) => this.handleSubmit(event, isFirstRun)}>
           <input id="password" type='password'/>

@@ -25,10 +25,11 @@ class Contacts extends Component {
 
   static mapStateToProps = ({ contacts }) => ({
     contacts: Object.keys(contacts).map(key => contacts[key]).sort((a, b) => a.name - b.name),
+    collection: contacts
   })
 
   componentDidMount() {
-    this.props.load();
+    this.props.load().then(() => this.setState({ selected: this.props.contacts[0].id }));
   }
 
   state = {
@@ -53,17 +54,27 @@ class Contacts extends Component {
   }
 
   render () {
+    const { contacts, collection } = this.props;
+    const current = collection[this.state.selected] || {};
+
     return (
       <div>
-        <div>
-          { this.props.contacts.map(contact => (
+        <aside>
+          { this.props.contacts.map(({ name, id }) => (
             <div>
-              <div> { JSON.stringify(contact) } </div>
-              <button>Edit</button>
-              <button onClick={() => this.props.remove(contact.id)}>Remove</button>
+              <div onClick={() => this.setState({ selected: id })}> { name } </div>
+              {/* <button>Edit</button> */}
+              <button onClick={() => this.props.remove(id)}>Remove</button>
             </div>
           )) }
+        </aside>
+
+        <div>
+          { Object.keys(current).map((key) => (
+              <div>{ key }: { current[key] }</div>
+            )) }
         </div>
+
 
         <Form onSubmit={this.create} />
       </div>
