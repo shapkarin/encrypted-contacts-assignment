@@ -71,7 +71,7 @@ class Contacts extends Component {
 
         <div>
           { Object.keys(current).map((key) => (
-              <div>{ key }: { current[key] }</div>
+              <div>{ key !== 'id' && `${key}: ${current[key]}`}</div>
             )) }
         </div>
 
