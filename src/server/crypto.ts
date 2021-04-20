@@ -27,9 +27,9 @@ const decrypt = (hash, password) => {
 const scrypt = {
   create: async (password) => (
     new Promise((resolve, reject) => {
-      const salt = crypto.randomBytes(16).toString("hex")
+      const salt = crypto.randomBytes(32).toString("hex")
 
-      crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+      crypto.scrypt(password, salt, 256, (err, derivedKey) => {
           if (err) reject(err);
           resolve(salt + ":" + derivedKey.toString('hex'))
       });
@@ -39,7 +39,7 @@ const scrypt = {
     new Promise((resolve, reject) => {
         const [ salt, key ] = hash.split(":")
          const keyBuffer = Buffer.from(key, 'hex')
-        crypto.scrypt(password, salt, 64, (err, derivedKey) => {
+        crypto.scrypt(password, salt, 256, (err, derivedKey) => {
             if (err) reject(err);
             resolve(crypto.timingSafeEqual(keyBuffer, derivedKey))
         });
