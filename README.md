@@ -15,7 +15,7 @@ npm start
 
 - Password is not sotred anywhere like a string, only at httpOnly cookie while a session
 - To verify a user with users db it used node.js crypto.scrypt
-- To encrypt and decrypt the contacts it used aes-256-ctr and the password from the httpOnly cookie, iv and global_salt
+- To encrypt and decrypt the contacts it used aes-256-ctr and the password from the httpOnly cookie changed with pbkdf2, iv and global_salt
 - To store to the contacts and users it used database (nedb)
 - To manipulate the data it used node express server and CRUD API
 - Tests are at `src/__tests__/App.test.tsx`;
