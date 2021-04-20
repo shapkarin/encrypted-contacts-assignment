@@ -4,13 +4,13 @@ import { withRouter } from 'react-router-dom'
 
 import { load, create, update, remove } from '../Actions/contact';
 
-const Form = ({ onSubmit, name, phone, email, address }) => (
+const Form = ({ onSubmit, contact = {}, edit }) => (
   <form onSubmit={onSubmit}>
     name: <input id="name" type='text'/><br/>
     phone: <input id="phone" type='text'/><br/>
     email: <input id="email" type='text'/><br/>
     address: <input id="address" type='text'/>
-    <button type="submit">Add</button>
+    <button type="submit">{ edit ? 'Save' : 'Add' }</button>
   </form>
 )
 
@@ -50,9 +50,24 @@ class Contacts extends Component {
         }
       }
     } = event;
-    const { create, load } = this.props;
+    const { create } = this.props;
 
     create({ name, phone, email, address });
+  }
+
+  edit = () => {
+    event.preventDefault();
+    const {
+      target: {
+        elements: {
+          name: { value: name },
+          phone: { value: phone },
+          email: { value: email },
+          address: { value: address }
+        }
+      }
+    } = event;
+    this.props.update({ id: this.state.selected, name, phone, email, address })
   }
 
   render () {
@@ -65,8 +80,6 @@ class Contacts extends Component {
           { this.props.contacts.map(({ name, id }) => (
             <div>
               <div onClick={() => this.setState({ selected: id })}> { name } </div>
-              {/* <button>Edit</button> */}
-              <button onClick={() => this.props.remove(id)}>Remove</button>
             </div>
           )) }
         </aside>
@@ -75,10 +88,13 @@ class Contacts extends Component {
           { Object.keys(current).map((key) => (
               <div>{ key !== 'id' && `${key}: ${current[key]}`}</div>
             )) }
+            <button onClick={() => this.props.remove(current.id)}>Remove</button>
+            {/* <button onClick={() => {}}>Edit</button> */}
         </div>
 
 
         <Form onSubmit={this.create} />
+
       </div>
     )
   }

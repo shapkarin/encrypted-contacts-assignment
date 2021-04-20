@@ -101,9 +101,9 @@ export default function() {
 
       const { body: { contact }, params: { id }, cookies: { password } } = req;
 
-      if(!body && !id && !password) return res.sendStatus(400);
+      if(!contact && !id && !password) return res.sendStatus(400);
 
-      const hash = encrypt(contact, password);
+      const hash = encrypt(JSON.stringify(contact), password);
       Contacts.update({_id: id}, { hash }, {}, function(err){
         if (err) console.log(err);
 
