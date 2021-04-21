@@ -12,6 +12,10 @@ const { Content } = Layout;
 
 @connect
 class Auth extends Component {
+  constructor(props){
+    super(props);
+    this.passwordRef = React.createRef();
+  }
   static mapStateToProps = ({ user: { authed, error } }) => ({
     authed,
     error
@@ -34,6 +38,7 @@ class Auth extends Component {
 
   componentDidMount() {
     this.checkIfFirstRun();
+    // this.passwordRef.current!.focus();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -85,6 +90,7 @@ class Auth extends Component {
                 id="password"
                 placeholder="Enter your password"
                 prefix={<LockFilled className="site-form-item-icon" />}
+                ref={this.passwordRef}
               />
             </Col>
             <Col span={7}>
