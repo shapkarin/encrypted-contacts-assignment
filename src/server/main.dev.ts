@@ -11,7 +11,8 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
+
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
@@ -135,6 +136,11 @@ app.on('activate', () => {
 app.on('ready', function() {
   server();
 });
+
+ipcMain.on('quit', () => {
+  app.quit();
+});
+
 
 // added because I can't spend so much time to get in used with certificates
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');

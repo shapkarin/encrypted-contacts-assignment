@@ -1,8 +1,13 @@
 import React, { Component, useState } from 'react';
 import connect from 'react-redux-connect';
 import { withRouter } from 'react-router-dom'
+import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
+import { LockFilled } from '@ant-design/icons';
 
 import { load, create, update, remove } from '../Actions/contact';
+
+const { Title, Text } = Typography;
+const { Header, Sider, Content, Footer } = Layout;
 
 const Form = ({ onSubmit, contact = {}, edit }) => (
   <form onSubmit={onSubmit}>
@@ -30,12 +35,14 @@ class Contacts extends Component {
 
   componentDidMount() {
     this.props.load().then(() => {
+      console.log('loaded');
       this.setState({ selected: this.props.contacts[0]?.id })
     });
   }
 
   state = {
-    selected: null,
+    selected: '',
+    isEdit: false
   }
 
   create = (event) => {
@@ -75,27 +82,41 @@ class Contacts extends Component {
     const current = collection[this.state.selected] || {};
 
     return (
-      <div>
-        <aside>
-          { this.props.contacts.map(({ name, id }) => (
-            <div>
-              <div onClick={() => this.setState({ selected: id })}> { name } </div>
-            </div>
-          )) }
-        </aside>
-
-        <div>
-          { Object.keys(current).map((key) => (
-              <div>{ key !== 'id' && `${key}: ${current[key]}`}</div>
+      <Layout>
+        <Sider theme="light">
+          <aside>
+            { this.props.contacts.map(({ name, id }) => (
+              <div key={id} onClick={() => this.setState({ selected: id })}> { name } </div>
+            )) }
+          </aside>
+        </Sider>
+        <Content style={{background: 'white'}}>
+          <div>
+            { Object.keys(current).map((key) => (
+              <div>
+              {
+                key !== 'id'
+                &&
+                <>
+                  {key}:
+                  <Text
+                    editable={this.state.isEdit}
+                    key={key}
+                  >
+                    {current[key]}
+                  </Text>
+                </>
+              }
+              </div>
             )) }
             <button onClick={() => this.props.remove(current.id)}>Remove</button>
+            <button onClick={() => console.log('todo the UI')}>Edit</button>
             {/* <button onClick={() => {}}>Edit</button> */}
-        </div>
-
-
-        <Form onSubmit={this.create} />
-
-      </div>
+          </div>
+          <Divider>Add a contact</Divider>
+          <Form onSubmit={this.create} />
+        </Content>
+      </Layout>
     )
   }
 }

@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import connect from 'react-redux-connect';
+import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout } from 'antd';
+import { LockFilled } from '@ant-design/icons';
+import { ipcRenderer } from 'electron';
 
-import { exist, create, check, } from '../Actions/user';
+import { exist, create, check } from '../Actions/user';
+
+const { Title, Text } = Typography;
+const { Content } = Layout;
 
 @connect
 class Auth extends Component {
@@ -59,21 +65,49 @@ class Auth extends Component {
     }
   }
 
+  quitApp(){
+    ipcRenderer.send('quit')
+  }
+
   render () {
     if(!this.state.alive) return <div></div>;
 
     const { isFirstRun } = this.state;
 
     return (
-      <div>
-        <h1>Welcome To The Simple Secure Contact Manager</h1>
-        <h2>Please enter a password for your { isFirstRun && 'new' } contact data file</h2>
+      <Space direction="vertical">
+        <Title level={3}>Welcome To The Simple Secure Contact Manager</Title>
+        <Text level={4}>Please enter a password for your { isFirstRun && 'new' } contact data file</Text>
         <form onSubmit={(event) => this.handleSubmit(event, isFirstRun)}>
-          <input id="password" type='password'/>
-          <button type="submit">Send</button>
+          <Row>
+            <Col span={17}>
+              <Input.Password
+                id="password"
+                placeholder="Enter your password"
+                prefix={<LockFilled className="site-form-item-icon" />}
+              />
+            </Col>
+            <Col span={7}>
+              <Button
+                htmlType="submit"
+                block={true}
+                type="primary"
+              >
+                { isFirstRun ? 'Create' : 'Login' }
+              </Button>
+            </Col>
+            {this.props.error.length > 0 && <Text type="danger">{ this.props.error }</Text>}
+          </Row>
+          <Button
+            type="primary"
+            onClick={this.quitApp}
+            style={{marginTop: 142}}
+          >
+            Close the app
+          </Button>
         </form>
-        {this.props.error.length > 0 && <div>{ this.props.error }</div>}
-      </div>
+
+      </Space>
     )
   };
 }

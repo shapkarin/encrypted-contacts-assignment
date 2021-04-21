@@ -10,6 +10,7 @@ import Auth from './Pages/Auth';
 
 import 'App.global.css';
 
+
 const history = createHashHistory();
 
 export default function App() {
