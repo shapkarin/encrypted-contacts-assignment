@@ -6,10 +6,9 @@ import { createHashHistory } from 'history';
 import store from './Store';
 import Contacts from './Pages/Contacts';
 import Auth from './Pages/Auth';
-// import WithAuth from './WithAuthHOC';
+import RequireAuth from './RequireAuthHOC';
 
 import 'App.global.css';
-
 
 const history = createHashHistory();
 
@@ -19,8 +18,7 @@ export default function App() {
       <HashRouter history={history}>
         <Switch>
           <Route exact path="/" component={Auth} />
-          <Route path="/contacts" component={Contacts} />
-          {/* <Route path="/contacts" component={WithAuth(Contacts)} /> */}
+          <Route path="/contacts" component={RequireAuth(Contacts)} />
         </Switch>
       </HashRouter>
     </Provider>

@@ -1,6 +1,5 @@
 import React, { Component, useState } from 'react';
 import connect from 'react-redux-connect';
-import { withRouter } from 'react-router-dom'
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
@@ -137,4 +136,4 @@ class Contacts extends Component {
   }
 }
 
-export default withRouter(Contacts);
+export default Contacts;

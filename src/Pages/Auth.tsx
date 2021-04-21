@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout } from 'antd';
 import { LockFilled } from '@ant-design/icons';
@@ -118,4 +117,4 @@ class Auth extends Component {
   };
 }
 
-export default withRouter(Auth);
+export default Auth;
