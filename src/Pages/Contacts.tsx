@@ -9,13 +9,16 @@ import { load, create, update, remove } from '../Actions/contact';
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
 
-const Form = ({ onSubmit, contact = {}, edit }) => (
+const Form = ({ onSubmit, contact: { name, phone, email, address } = {}, edit, close }) => (
   <form onSubmit={onSubmit}>
-    name: <input id="name" type='text'/><br/>
-    phone: <input id="phone" type='text'/><br/>
-    email: <input id="email" type='text'/><br/>
-    address: <input id="address" type='text'/>
-    <button type="submit">{ edit ? 'Save' : 'Add' }</button>
+    name: <input id="name" type='text' defaultValue={name}/><br/>
+    phone: <input id="phone" type='text' defaultValue={phone}/><br/>
+    email: <input id="email" type='text' defaultValue={email}/><br/>
+    address: <input id="address" type='text' defaultValue={address}/>
+    <Button htmlType="submit" type="primary">
+      { edit ? 'Save' : 'Add' }
+    </Button>
+    {edit && <Button type="primary" onClick={close}>Close</Button>}
   </form>
 )
 
@@ -62,7 +65,7 @@ class Contacts extends Component {
     create({ name, phone, email, address });
   }
 
-  edit = () => {
+  update = async (event) => {
     event.preventDefault();
     const {
       target: {
@@ -74,7 +77,15 @@ class Contacts extends Component {
         }
       }
     } = event;
-    this.props.update({ id: this.state.selected, name, phone, email, address })
+    await this.props.update({ id: this.state.selected, name, phone, email, address });
+    this.setState({ isEdit: false });
+  }
+
+  remove = async (id) => {
+    await this.props.remove(current.id);
+    if (this.state.isEdit) {
+      this.setState({ isEdit: false });
+    }
   }
 
   render () {
@@ -91,7 +102,7 @@ class Contacts extends Component {
           </aside>
         </Sider>
         <Content style={{background: 'white'}}>
-          <div>
+          {!this.state.isEdit ? <div>
             { Object.keys(current).map((key) => (
               <div>
               {
@@ -100,7 +111,6 @@ class Contacts extends Component {
                 <>
                   {key}:
                   <Text
-                    editable={this.state.isEdit}
                     key={key}
                   >
                     {current[key]}
@@ -108,11 +118,17 @@ class Contacts extends Component {
                 </>
               }
               </div>
-            )) }
-            <button onClick={() => this.props.remove(current.id)}>Remove</button>
-            <button onClick={() => console.log('todo the UI')}>Edit</button>
-            {/* <button onClick={() => {}}>Edit</button> */}
-          </div>
+            ))} </div>
+            :
+            <Form
+              onSubmit={this.update}
+              contact={current}
+              edit={true}
+              close={() => this.setState({ isEdit: false })}
+            />
+            }
+            <button onClick={() => this.remove(selected)}>Remove</button>
+            {!this.state.isEdit &&  <button onClick={() => this.setState({ isEdit: true })}>Edit</button>}
           <Divider>Add a contact</Divider>
           <Form onSubmit={this.create} />
         </Content>
