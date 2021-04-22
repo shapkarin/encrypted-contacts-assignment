@@ -6,22 +6,10 @@ import { LockFilled } from '@ant-design/icons';
 
 import { load, create, update, remove } from '../Actions/contact';
 import ContactDetails from '../Components/ContactDetails';
+import ContactForm from '../Components/ContactForm';
 
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
-
-const Form = ({ onSubmit, contact: { name, phone, email, address } = {}, edit, close }) => (
-  <form onSubmit={onSubmit}>
-    name: <input id="name" type='text' defaultValue={name}/><br/>
-    phone: <input id="phone" type='text' defaultValue={phone}/><br/>
-    email: <input id="email" type='text' defaultValue={email}/><br/>
-    address: <input id="address" type='text' defaultValue={address}/>
-    <Button htmlType="submit" type="primary">
-      { edit ? 'Save' : 'Add' }
-    </Button>
-    {edit && <Button type="primary" onClick={close}>Close</Button>}
-  </form>
-)
 
 @connect
 class Contacts extends Component {
@@ -46,11 +34,10 @@ class Contacts extends Component {
 
   state = {
     selected: '',
-    isEdit: false,
     view: 'details'
   }
 
-  create = async (event) => {
+  add = async (event) => {
     event.preventDefault();
     const {
       target: {
@@ -81,21 +68,25 @@ class Contacts extends Component {
       }
     } = event;
     await this.props.update({ id: this.state.selected, name, phone, email, address });
-    this.setState({ isEdit: false });
+    this.setState({ view: 'details' });
   }
 
   remove = (id) => {
     this.props.remove(id);
   }
 
-  // todo: refact later
+  // maybe refact later
   renderView({ name, current }) {
     const views = {
       details: (
-        <ContactDetails contact={current} remove={() => { this.remove(current.id) }} />
+        <ContactDetails
+          contact={current}
+          remove={() => this.remove(current.id)}
+          edit={() => this.setState({ view: 'edit' })}
+        />
       ),
       edit: (
-        <Form
+        <ContactForm
           onSubmit={this.update}
           contact={current}
           edit={true}
@@ -103,7 +94,7 @@ class Contacts extends Component {
         />
       ),
       add: (
-        <Form onSubmit={this.create} />
+        <ContactForm onSubmit={this.add} />
       )
     }
     return views[name] || '';
@@ -111,20 +102,18 @@ class Contacts extends Component {
 
   render () {
     const { contacts, collection } = this.props;
-    const current = collection[this.state.selected] || {};
 
     return (
       <Layout>
         <Sider theme="light">
           <aside>
-            { this.props.contacts.map(({ name, id }) => (
+            {this.props.contacts.map(({ name, id }) => (
               <div key={id} onClick={() => this.setState({ selected: id })}> { name } </div>
-            )) }
+            ))}
           </aside>
         </Sider>
         <Content style={{background: 'white'}}>
-          { this.renderView({ name: this.state.view, current }) }
-          {this.state.view === 'details' &&  <Button type="primary" onClick={() => this.setState({ view: 'edit' })}>Edit</Button>}
+          {this.renderView({ name: this.state.view, current: collection[this.state.selected] })}
           {this.state.view === 'details' && <Button type="primary" onClick={() => this.setState({ view: 'add' })}>Add</Button>}
         </Content>
       </Layout>

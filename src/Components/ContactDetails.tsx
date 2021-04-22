@@ -3,8 +3,10 @@ import { Typography, Button } from 'antd';
 
 const { Text } = Typography;
 
-const Details = ({ contact, remove }) => (
-  <div>
+const Details = ({ contact, remove, edit }) => {
+  if (contact === undefined) return '';
+
+  return <div>
     { Object.keys(contact).map((key) => (
       <div>
       {
@@ -21,8 +23,11 @@ const Details = ({ contact, remove }) => (
       }
       </div>
     ))}
-    <Button type="primary" onClick={remove}>Remove</Button>
+    <div>
+      <Button type="primary" onClick={remove}>Remove</Button>
+      <Button type="primary" onClick={edit}>Edit</Button>
+    </div>
   </div>
-)
+}
 
 export default Details;
