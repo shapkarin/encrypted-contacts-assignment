@@ -1,9 +1,9 @@
 import React from 'react';
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
 
 const { Text } = Typography;
 
-const Details = ({ contact }) => (
+const Details = ({ contact, remove }) => (
   <div>
     { Object.keys(contact).map((key) => (
       <div>
@@ -21,6 +21,7 @@ const Details = ({ contact }) => (
       }
       </div>
     ))}
+    <Button type="primary" onClick={remove}>Remove</Button>
   </div>
 )
 
