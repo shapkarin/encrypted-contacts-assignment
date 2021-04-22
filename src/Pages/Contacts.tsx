@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link, withRouter } from 'react-router-dom';
+import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
@@ -89,33 +89,38 @@ class Contacts extends Component {
         </Sider>
         <Content style={{background: 'white'}}>
           {/* todo: refact, replace render prop with component prop and use redux at each component */}
-          <Route
-            path='/contacts/details'
-            render={(props) => (
-              <ContactDetails
-                {...props}
-                contact={current}
-                remove={() => this.remove(current.id)}
-              />
-            )}
-          />
-          <Route
-            path='/contacts/edit'
-            render={(props) => (
-              <ContactForm
-                {...props}
-                onSubmit={this.update}
-                contact={current}
-                edit={true}
-              />
-            )}
-          />
-          <Route
-            path='/contacts/add'
-            render={(props) => (
-              <ContactForm {...props} onSubmit={this.add} />
-            )}
-          />
+          <Switch>
+            <Route
+              exact
+              path='/contacts'
+              render={(props) => (
+                <ContactDetails
+                  {...props}
+                  contact={current}
+                  remove={() => this.remove(current.id)}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/contacts/edit'
+              render={(props) => (
+                <ContactForm
+                  {...props}
+                  onSubmit={this.update}
+                  contact={current}
+                  edit={true}
+                />
+              )}
+            />
+            <Route
+              exact
+              path='/contacts/add'
+              render={(props) => (
+                <ContactForm {...props} onSubmit={this.add} />
+              )}
+            />
+          </Switch>
           <Button type="primary" onClick={() => this.props.history.push('/contacts/add')}>Add</Button>
         </Content>
       </Layout>

@@ -18,7 +18,7 @@ export default function App() {
       <HashRouter history={history}>
         <Switch>
           <Route exact path="/" component={Auth} />
-          <Route path="/contacts" component={RequireAuth(Contacts)} />
+          <Route exact path="/contacts" component={RequireAuth(Contacts)} />
         </Switch>
       </HashRouter>
     </Provider>
