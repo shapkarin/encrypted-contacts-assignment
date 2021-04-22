@@ -1,25 +1,15 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
+import { Route, Link } from 'react-router-dom';
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
 import { load, create, update, remove } from '../Actions/contact';
+import ContactDetails from '../Components/ContactDetails';
+import ContactForm from '../Components/ContactForm';
 
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
-
-const Form = ({ onSubmit, contact: { name, phone, email, address } = {}, edit, close }) => (
-  <form onSubmit={onSubmit}>
-    name: <input id="name" type='text' defaultValue={name}/><br/>
-    phone: <input id="phone" type='text' defaultValue={phone}/><br/>
-    email: <input id="email" type='text' defaultValue={email}/><br/>
-    address: <input id="address" type='text' defaultValue={address}/>
-    <Button htmlType="submit" type="primary">
-      { edit ? 'Save' : 'Add' }
-    </Button>
-    {edit && <Button type="primary" onClick={close}>Close</Button>}
-  </form>
-)
 
 @connect
 class Contacts extends Component {
@@ -44,10 +34,10 @@ class Contacts extends Component {
 
   state = {
     selected: '',
-    isEdit: false
+    view: 'details'
   }
 
-  create = (event) => {
+  add = async (event) => {
     event.preventDefault();
     const {
       target: {
@@ -61,7 +51,8 @@ class Contacts extends Component {
     } = event;
     const { create } = this.props;
 
-    create({ name, phone, email, address });
+    await create({ name, phone, email, address });
+    this.setState({ view: 'details' });
   }
 
   update = async (event) => {
@@ -77,59 +68,53 @@ class Contacts extends Component {
       }
     } = event;
     await this.props.update({ id: this.state.selected, name, phone, email, address });
-    this.setState({ isEdit: false });
+    this.setState({ view: 'details' });
   }
 
-  remove = async (id) => {
-    await this.props.remove(current.id);
-    if (this.state.isEdit) {
-      this.setState({ isEdit: false });
+  remove = (id) => {
+    this.props.remove(id);
+  }
+
+  // maybe refact later
+  renderView({ name, current }) {
+    const views = {
+      details: (
+        <ContactDetails
+          contact={current}
+          remove={() => this.remove(current.id)}
+          edit={() => this.setState({ view: 'edit' })}
+        />
+      ),
+      edit: (
+        <ContactForm
+          onSubmit={this.update}
+          contact={current}
+          edit={true}
+          close={() => this.setState({ view: 'details' })}
+        />
+      ),
+      add: (
+        <ContactForm onSubmit={this.add} />
+      )
     }
+    return views[name] || '';
   }
 
   render () {
     const { contacts, collection } = this.props;
-    const current = collection[this.state.selected] || {};
 
     return (
       <Layout>
         <Sider theme="light">
           <aside>
-            { this.props.contacts.map(({ name, id }) => (
+            {this.props.contacts.map(({ name, id }) => (
               <div key={id} onClick={() => this.setState({ selected: id })}> { name } </div>
-            )) }
+            ))}
           </aside>
         </Sider>
         <Content style={{background: 'white'}}>
-          {!this.state.isEdit ? <div>
-            { Object.keys(current).map((key) => (
-              <div>
-              {
-                key !== 'id'
-                &&
-                <>
-                  {key}:
-                  <Text
-                    key={key}
-                  >
-                    {current[key]}
-                  </Text>
-                </>
-              }
-              </div>
-            ))} </div>
-            :
-            <Form
-              onSubmit={this.update}
-              contact={current}
-              edit={true}
-              close={() => this.setState({ isEdit: false })}
-            />
-            }
-            <button onClick={() => this.remove(selected)}>Remove</button>
-            {!this.state.isEdit &&  <button onClick={() => this.setState({ isEdit: true })}>Edit</button>}
-          <Divider>Add a contact</Divider>
-          <Form onSubmit={this.create} />
+          {this.renderView({ name: this.state.view, current: collection[this.state.selected] })}
+          {this.state.view === 'details' && <Button type="primary" onClick={() => this.setState({ view: 'add' })}>Add</Button>}
         </Content>
       </Layout>
     )
