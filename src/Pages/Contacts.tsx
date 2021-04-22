@@ -1,9 +1,11 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
+import { Route, Link } from 'react-router-dom';
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
 import { load, create, update, remove } from '../Actions/contact';
+import ContactDetails from '../Components/ContactDetails';
 
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
@@ -44,7 +46,8 @@ class Contacts extends Component {
 
   state = {
     selected: '',
-    isEdit: false
+    isEdit: false,
+    view: 'details'
   }
 
   create = (event) => {
@@ -87,6 +90,27 @@ class Contacts extends Component {
     }
   }
 
+  // todo: refact later
+  renderView({ name, current }) {
+    const views = {
+      details: (
+        <ContactDetails contact={current} />
+      ),
+      edit: (
+        <Form
+          onSubmit={this.update}
+          contact={current}
+          edit={true}
+          close={() => this.setState({ isEdit: false })}
+        />
+      ),
+      create: (
+        <Form onSubmit={this.create} />
+      )
+    }
+    return views[name] || '';
+  }
+
   render () {
     const { contacts, collection } = this.props;
     const current = collection[this.state.selected] || {};
@@ -101,6 +125,9 @@ class Contacts extends Component {
           </aside>
         </Sider>
         <Content style={{background: 'white'}}>
+          { this.renderView({ name: this.state.view, current }) }
+          <br />
+          <hr />
           {!this.state.isEdit ? <div>
             { Object.keys(current).map((key) => (
               <div>
@@ -123,11 +150,11 @@ class Contacts extends Component {
               onSubmit={this.update}
               contact={current}
               edit={true}
-              close={() => this.setState({ isEdit: false })}
+              close={() => this.setState({ view: 'details' })}
             />
             }
             <button onClick={() => this.remove(selected)}>Remove</button>
-            {!this.state.isEdit &&  <button onClick={() => this.setState({ isEdit: true })}>Edit</button>}
+            {!this.state.view !== 'edit' &&  <button onClick={() => this.setState({ view: 'edit' })}>Edit</button>}
           <Divider>Add a contact</Divider>
           <Form onSubmit={this.create} />
         </Content>
