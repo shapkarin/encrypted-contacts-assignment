@@ -47,14 +47,12 @@ class Auth extends Component {
   }
 
   checkIfFirstRun = async () => {
-
     const isExist = await exist();
     this.setState({ isFirstRun: !isExist, alive: true });
   }
 
 
   handleSubmit = async (event, isFirstRun) => {
-
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;
     const { history: { push: navigate }, addUser, checkUser, error } = this.props;
