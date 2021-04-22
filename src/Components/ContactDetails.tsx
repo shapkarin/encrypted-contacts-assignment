@@ -1,9 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Typography, Button } from 'antd';
 
 const { Text } = Typography;
 
-const Details = ({ contact, remove, edit }) => {
+const Details = ({ contact, remove, edit, history, match }) => {
   if (contact === undefined) return null;
 
   return <div>
@@ -21,9 +22,9 @@ const Details = ({ contact, remove, edit }) => {
     ))}
     <div>
       <Button type="primary" onClick={remove}>Remove</Button>
-      <Button type="primary" onClick={edit}>Edit</Button>
+      <Button type="primary" onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>
     </div>
   </div>
 }
 
-export default Details;
+export default withRouter(Details);

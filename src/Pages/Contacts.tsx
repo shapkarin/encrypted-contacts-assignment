@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Switch, Router, Route, Link, withRouter, HashRouter } from 'react-router-dom';
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
@@ -8,8 +8,12 @@ import { load, create, update, remove } from '../Actions/contact';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
 
+import { history } from '../App'
+
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
+
+
 
 @connect
 class Contacts extends Component {
@@ -34,7 +38,6 @@ class Contacts extends Component {
 
   state = {
     selected: '',
-    view: 'details'
   }
 
   add = async (event) => {
@@ -52,7 +55,7 @@ class Contacts extends Component {
     const { create } = this.props;
 
     await create({ name, phone, email, address });
-    this.setState({ view: 'details' });
+    this.props.history.push(this.props.match.url)
   }
 
   update = async (event) => {
@@ -68,40 +71,16 @@ class Contacts extends Component {
       }
     } = event;
     await this.props.update({ id: this.state.selected, name, phone, email, address });
-    this.setState({ view: 'details' });
+    this.props.history.push(this.props.match.url);
   }
 
   remove = (id) => {
     this.props.remove(id);
   }
 
-  // can be replaced with router
-  renderView({ name, current }) {
-    const views = {
-      details: (
-        <ContactDetails
-          contact={current}
-          remove={() => this.remove(current.id)}
-          edit={() => this.setState({ view: 'edit' })}
-        />
-      ),
-      edit: (
-        <ContactForm
-          onSubmit={this.update}
-          contact={current}
-          edit={true}
-          close={() => this.setState({ view: 'details' })}
-        />
-      ),
-      add: (
-        <ContactForm onSubmit={this.add} />
-      )
-    }
-    return views[name] || '';
-  }
-
   render () {
     const { contacts, collection } = this.props;
+    const current = collection[this.state.selected];
 
     return (
       <Layout>
@@ -113,12 +92,43 @@ class Contacts extends Component {
           </aside>
         </Sider>
         <Content style={{background: 'white'}}>
-          {this.renderView({ name: this.state.view, current: collection[this.state.selected] })}
-          {this.state.view === 'details' && <Button type="primary" onClick={() => this.setState({ view: 'add' })}>Add</Button>}
+          <HashRouter history={history}>
+            <Switch>
+              <Route
+                exact
+                path={this.props.match.path}
+                render={(props) => (
+                  <ContactDetails
+                    {...props}
+                    contact={current}
+                    remove={() => this.remove(current.id)}
+                  />
+                )}
+              />
+              <Route
+                path={`${this.props.match.path}/edit`}
+                render={(props) => (
+                  <ContactForm
+                    {...props}
+                    onSubmit={this.update}
+                    contact={current}
+                    edit={true}
+                  />
+                )}
+              />
+              <Route
+                path={`${this.props.match.path}/add`}
+                render={(props) => (
+                  <ContactForm {...props} onSubmit={this.add} />
+                )}
+              />
+            </Switch>
+          </HashRouter>
+          <Button type="primary" onClick={() => this.props.history.push(`${this.props.match.url}/add`)}>Add</Button>
         </Content>
       </Layout>
     )
   }
 }
 
-export default Contacts;
+export default withRouter(Contacts);

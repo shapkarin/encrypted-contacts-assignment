@@ -10,7 +10,7 @@ import RequireAuth from './Components/RequireAuthHOC';
 
 import 'App.global.css';
 
-const history = createHashHistory();
+export const history = createHashHistory();
 
 export default function App() {
   return (
