@@ -75,7 +75,7 @@ class Contacts extends Component {
     this.props.remove(id);
   }
 
-  // maybe refact later
+  // can be replaced with router
   renderView({ name, current }) {
     const views = {
       details: (
