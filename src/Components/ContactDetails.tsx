@@ -4,8 +4,8 @@ import { Typography, Button } from 'antd';
 
 const { Text } = Typography;
 
-const Details = ({ contact, remove, edit, history }) => {
-  if (contact === undefined) return <div>asdasdasd</div>;
+const Details = ({ contact, remove, edit, history, match }) => {
+  if (contact === undefined) return null;
 
   return <div>
     { Object.keys(contact).map((key) => (
@@ -22,7 +22,7 @@ const Details = ({ contact, remove, edit, history }) => {
     ))}
     <div>
       <Button type="primary" onClick={remove}>Remove</Button>
-      <Button type="primary" onClick={() => history.push('/contacts/edit')}>Edit</Button>
+      <Button type="primary" onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>
     </div>
   </div>
 }
