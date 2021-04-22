@@ -4,23 +4,19 @@ import { Typography, Button } from 'antd';
 const { Text } = Typography;
 
 const Details = ({ contact, remove, edit }) => {
-  if (contact === undefined) return '';
+  if (contact === undefined) return null;
 
   return <div>
     { Object.keys(contact).map((key) => (
       <div>
-      {
-        key !== 'id'
-        &&
-        <>
-          {key}:
-          <Text
-            key={key}
-          >
-            {contact[key]}
-          </Text>
-        </>
-      }
+        {
+          key !== 'id'
+          &&
+          <>
+            {key}:
+            <Text key={key}>{contact[key]}</Text>
+          </>
+        }
       </div>
     ))}
     <div>
