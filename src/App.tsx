@@ -6,7 +6,7 @@ import { createHashHistory } from 'history';
 import store from './Store';
 import Contacts from './Pages/Contacts';
 import Auth from './Pages/Auth';
-import RequireAuth from './RequireAuthHOC';
+import RequireAuth from './Components/RequireAuthHOC';
 
 import 'App.global.css';
 
