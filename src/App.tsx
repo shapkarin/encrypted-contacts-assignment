@@ -10,7 +10,7 @@ import RequireAuth from './Components/RequireAuthHOC';
 
 import 'App.global.css';
 
-const history = createHashHistory();
+export const history = createHashHistory();
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
       <HashRouter history={history}>
         <Switch>
           <Route exact path="/" component={Auth} />
-          <Route exact path="/contacts" component={RequireAuth(Contacts)} />
+          <Route path="/contacts" component={RequireAuth(Contacts)} />
         </Switch>
       </HashRouter>
     </Provider>

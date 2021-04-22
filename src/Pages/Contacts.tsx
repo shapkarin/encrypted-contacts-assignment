@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
+import { Switch, Router, Route, Link, withRouter, HashRouter } from 'react-router-dom';
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
@@ -79,6 +79,7 @@ class Contacts extends Component {
     const current = collection[this.state.selected];
 
     return (
+      <HashRouter>
       <Layout>
         <Sider theme="light">
           <aside>
@@ -91,8 +92,7 @@ class Contacts extends Component {
           {/* todo: refact, replace render prop with component prop and use redux at each component */}
           <Switch>
             <Route
-              exact
-              path='/contacts'
+              path={this.props.match.path}
               render={(props) => (
                 <ContactDetails
                   {...props}
@@ -102,7 +102,6 @@ class Contacts extends Component {
               )}
             />
             <Route
-              exact
               path='/contacts/edit'
               render={(props) => (
                 <ContactForm
@@ -114,16 +113,17 @@ class Contacts extends Component {
               )}
             />
             <Route
-              exact
-              path='/contacts/add'
+              path={`${this.props.match.path}/add`}
               render={(props) => (
                 <ContactForm {...props} onSubmit={this.add} />
               )}
             />
           </Switch>
           <Button type="primary" onClick={() => this.props.history.push('/contacts/add')}>Add</Button>
+          <Link to={`${this.props.match.url}/add`}>Link add</Link>
         </Content>
       </Layout>
+      </HashRouter>
     )
   }
 }

@@ -5,7 +5,7 @@ import { Typography, Button } from 'antd';
 const { Text } = Typography;
 
 const Details = ({ contact, remove, edit, history }) => {
-  if (contact === undefined) return null;
+  if (contact === undefined) return <div>asdasdasd</div>;
 
   return <div>
     { Object.keys(contact).map((key) => (
