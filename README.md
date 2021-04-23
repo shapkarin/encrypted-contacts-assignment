@@ -29,6 +29,7 @@ This app can be grow in web service. The currently for that needed:
 - change db
 
 Improvements:
+- Protect the API
 - Types
 - More tests
 - Styles
