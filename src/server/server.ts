@@ -92,6 +92,8 @@ export default function() {
       Contacts.remove({ _id: id }, {}, function(err){
         if (err) console.log(err);
 
+        Contacts.persistence.compactDatafile();
+
         res.sendStatus(200);
       });
   });
