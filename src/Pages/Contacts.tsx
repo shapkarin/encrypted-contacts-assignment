@@ -29,11 +29,9 @@ class Contacts extends Component {
     collection: contacts
   })
 
-  componentDidMount() {
-    this.props.load().then(() => {
-      console.log('loaded');
-      this.setState({ selected: this.props.contacts[0]?.id })
-    });
+  async componentDidMount() {
+    await this.props.load();
+    this.setState({ selected: this.props.contacts[0]?.id });
   }
 
   state = {

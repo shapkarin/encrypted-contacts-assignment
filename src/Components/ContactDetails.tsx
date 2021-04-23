@@ -9,13 +9,13 @@ const Details = ({ contact, remove, edit, history, match }) => {
 
   return <div>
     { Object.keys(contact).map((key) => (
-      <div>
+      <div key={key}>
         {
           key !== 'id'
           &&
           <>
             {key}:
-            <Text key={key}>{contact[key]}</Text>
+            <Text>{contact[key]}</Text>
           </>
         }
       </div>
