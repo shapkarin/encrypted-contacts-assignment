@@ -32,6 +32,5 @@ Improvements:
 - Types
 - More tests
 - Styles
-- Edit the contact (redux and API endpoint are ready, UI needs to be added)
 
 To more check the issues and feel free to add.
