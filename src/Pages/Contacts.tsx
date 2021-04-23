@@ -87,7 +87,13 @@ class Contacts extends Component {
         <Sider theme="light">
           <aside>
             {this.props.contacts.map(({ name, id }) => (
-              <div key={id} onClick={() => this.setState({ selected: id })}> { name } </div>
+              <div
+                key={id}
+                onClick={() => this.setState({ selected: id })}
+                style={{ cursor: 'pointer' }}
+              >
+              { name }
+            </div>
             ))}
           </aside>
         </Sider>
@@ -124,7 +130,7 @@ class Contacts extends Component {
               />
             </Switch>
           </HashRouter>
-          <Button type="primary" onClick={() => this.props.history.push(`${this.props.match.url}/add`)}>Add</Button>
+          <Button type="primary" onClick={() => this.props.history.push(`${this.props.match.url}/add`)}>Add new contact</Button>
         </Content>
       </Layout>
     )

@@ -10,9 +10,7 @@ You need to generate sertificates and place it to the `./sslcert` folder to make
 ```sh
 npm start
 # or
-yarn start:renderer
-# or
-npm start
+yarn start
 ```
 
 - Password is not sotred anywhere like a string, only at httpOnly cookie while a session

@@ -74,12 +74,12 @@ export default function() {
 
         const hash = encrypt(JSON.stringify(contact), password);
 
-        Contacts.insert({ hash }, function (err) {
+        Contacts.insert({ hash }, function (err, { _id }) {
           if (err) {
             console.log(err);
             res.sendStatus(500);
           }
-          res.send(contact);
+          res.send({ ...contact, id: _id });
         });
 
   });
