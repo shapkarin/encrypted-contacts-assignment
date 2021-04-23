@@ -6,7 +6,6 @@ export default function() {
   const cookieParser = require('cookie-parser')
   const fs = require('fs');
   const bodyParser = require('body-parser')
-  const { promisify } = require('util');
   const path = require('path');
 
   const { encrypt, decrypt, scrypt } = require('./crypto');
