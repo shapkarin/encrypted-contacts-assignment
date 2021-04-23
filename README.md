@@ -1,12 +1,14 @@
 Install: 
 ```sh
+npm i
+#or
 yarn install
 ```
 
 Start the app:
 You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. 
 ```sh
-npm run start:renderer
+npm start
 # or
 yarn start:renderer
 # or
