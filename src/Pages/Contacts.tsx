@@ -4,7 +4,8 @@ import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
-import { load, create, update, remove } from '../Actions/contact';
+import { load, create, update, remove, show } from '../Actions/contacts';
+import { getCurrentContact } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
 
@@ -13,33 +14,32 @@ import { history } from '../App'
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
 
-
-
 @connect
 class Contacts extends Component {
   static mapDispatchToProps = {
     load,
     create,
     update,
-    remove
+    remove,
+    show,
   }
 
-  static mapStateToProps = ({ contacts }) => ({
-    contacts: Object.keys(contacts).map(key => contacts[key]).sort((a, b) => a.name - b.name),
-    collection: contacts
+  static mapStateToProps = ({ contacts: { collection, current }}) => ({
+    contacts: Object.keys(collection).map(key => collection[key]).sort((a, b) => a.name - b.name),
+    current: getCurrentContact({ collection, current }),
   })
 
   async componentDidMount() {
     await this.props.load();
-    this.setState({ selected: this.props.contacts[0]?.id });
-  }
+    const { contacts: [first], show } = this.props;
 
-  state = {
-    selected: '',
+    if(first) show(first.id);
   }
 
   add = async (event) => {
     event.preventDefault();
+
+    const { create, history: { push: navigate }, match: { url } } = this.props;
     const {
       target: {
         elements: {
@@ -50,14 +50,15 @@ class Contacts extends Component {
         }
       }
     } = event;
-    const { create } = this.props;
 
     await create({ name, phone, email, address });
-    this.props.history.push(this.props.match.url)
+    navigate(url);
   }
 
   update = async (event) => {
     event.preventDefault();
+
+    const { update, current: { id }, history: { push: navigate }, match: { url } } = this.props;
     const {
       target: {
         elements: {
@@ -68,26 +69,22 @@ class Contacts extends Component {
         }
       }
     } = event;
-    await this.props.update({ id: this.state.selected, name, phone, email, address });
-    this.props.history.push(this.props.match.url);
-  }
 
-  remove = (id) => {
-    this.props.remove(id);
+    await update({ id, name, phone, email, address });
+    navigate(url);
   }
 
   render () {
-    const { contacts, collection } = this.props;
-    const current = collection[this.state.selected];
+    const { contacts, current, remove, show } = this.props;
 
     return (
       <Layout>
         <Sider theme="light">
           <aside>
-            {this.props.contacts.map(({ name, id }) => (
+            {contacts.map(({ name, id }) => (
               <div
                 key={id}
-                onClick={() => this.setState({ selected: id })}
+                onClick={() => show(id)}
                 style={{ cursor: 'pointer' }}
               >
               { name }
@@ -101,13 +98,7 @@ class Contacts extends Component {
               <Route
                 exact
                 path={this.props.match.path}
-                render={(props) => (
-                  <ContactDetails
-                    {...props}
-                    contact={current}
-                    remove={() => this.remove(current.id)}
-                  />
-                )}
+                component={ContactDetails}
               />
               <Route
                 path={`${this.props.match.path}/edit`}

@@ -7,6 +7,7 @@ export const actions = {
   update: createAction('contacts/UPDATE'),
   remove: createAction('contacts/REMOVE'),
   load: createAction('contacts/LOAD'),
+  show: createAction('contacts/SHOW_BY_ID'),
 }
 
 const headers = { 'Content-Type': 'application/json' };
@@ -20,6 +21,7 @@ export const create = (contact) => async (dispatch) => {
     body: JSON.stringify({ contact }),
   });
   dispatch(actions.create(newContact));
+  dispatch(actions.show(newContact.id));
 };
 
 export const update = (contact) => async (dispatch) => {
@@ -43,3 +45,5 @@ export const load = () => async (dispatch) => {
   const contacts = await request(`${domain}/api/contacts/`);
   dispatch(actions.load(contacts));
 };
+
+export const show = actions.show;
