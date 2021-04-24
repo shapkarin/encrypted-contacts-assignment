@@ -13,7 +13,6 @@ const { Content } = Layout;
 class Auth extends Component {
   constructor(props){
     super(props);
-    this.passwordRef = React.createRef();
   }
   static mapStateToProps = ({ user: { authed, error } }) => ({
     authed,
@@ -32,18 +31,10 @@ class Auth extends Component {
   state = {
     alive: false,
     isFirstRun: true,
-    hasUser: this.props.authed
   }
 
   componentDidMount() {
     this.checkIfFirstRun();
-    // this.passwordRef.current!.focus();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.authed !== nextProps.authed) {
-      this.setState({ hasUser: nextProps.authed });
-    }
   }
 
   checkIfFirstRun = async () => {
@@ -51,42 +42,46 @@ class Auth extends Component {
     this.setState({ isFirstRun: !isExist, alive: true });
   }
 
-  handleSubmit = async (event, isFirstRun) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;
     const { history: { push: navigate }, addUser, checkUser, error } = this.props;
 
-    if (isFirstRun) {
+    if (this.state.isFirstRun) {
       await addUser(password);
     } else {
       await checkUser(password);
     }
-    if (this.state.hasUser) {
+    if (this.props.authed) {
       navigate('/contacts');
     }
   }
 
-  quitApp(){
+  quitApp () {
     ipcRenderer.send('quit')
   }
 
   render () {
-    if(!this.state.alive) return <div></div>;
+    if(!this.state.alive) return null;
 
     const { isFirstRun } = this.state;
 
     return (
       <Space direction="vertical">
-        <Title level={3}>Welcome To The Simple Secure Contact Manager</Title>
-        <Text level={4}>Please enter a password for your { isFirstRun && 'new' } contact data file</Text>
-        <form onSubmit={(event) => this.handleSubmit(event, isFirstRun)}>
+        <Title level={3}>
+          Welcome To The Simple Secure Contact Manager
+        </Title>
+        <Text level={4}>
+          Please enter a password for your { isFirstRun && 'new' } contact data file
+        </Text>
+        <form onSubmit={this.handleSubmit}>
           <Row>
             <Col span={17}>
               <Input.Password
+                autoFocus
                 id="password"
                 placeholder="Enter your password"
-                prefix={<LockFilled className="site-form-item-icon" />}
-                ref={this.passwordRef}
+                prefix={<LockFilled />}
               />
             </Col>
             <Col span={7}>
