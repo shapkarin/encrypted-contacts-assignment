@@ -19,7 +19,7 @@ yarn start
 - At first version all contacts related data is encrypted, so for example there is no way to create a search by some exact contact field
 - To store to the contacts and users it used database (nedb)
 - To manipulate the data it used node express server and CRUD API
-- Tests are at `src/__tests__/App.test.tsx`;
+- Tests are at `src/__tests__/App.test.tsx` (run: `npm test`);
 
 
 This app can be grow in web service. The currently for that needed:

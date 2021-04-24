@@ -51,7 +51,6 @@ class Auth extends Component {
     this.setState({ isFirstRun: !isExist, alive: true });
   }
 
-
   handleSubmit = async (event, isFirstRun) => {
     event.preventDefault();
     const { target: { elements: { password: { value: password } } } } = event;

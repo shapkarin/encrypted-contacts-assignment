@@ -2,15 +2,10 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
-import App from '../App';
 import { encrypt, decrypt, scrypt } from '../server/crypto';
 import { create, update, remove } from '../Actions';
 
-describe('App', () => {
-  it('should render', () => {
-    expect(render(<App />)).toBeTruthy();
-  });
-
+describe('Test crypto module', () => {
   const data = 'Some data';
   const pass = '1234567890';
   const hash = encrypt(data, pass);
@@ -28,7 +23,7 @@ describe('App', () => {
 
   it('should create a password hash with scrypt that not equals the input', async () => {
     const scrypt_hash = await scrypt.create(password);
-    expect(password).not.toBe(scrypt_hash)
+    expect(password).not.toBe(scrypt_hash);
   });
 
   it('should verify the password with hash', async () => {
