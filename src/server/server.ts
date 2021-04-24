@@ -1,14 +1,15 @@
-export default function() {
-  const express = require('express');
-  const Datastore = require('nedb');
-  const https = require('https');
-  const app = express();
-  const cookieParser = require('cookie-parser')
-  const fs = require('fs');
-  const bodyParser = require('body-parser')
-  const path = require('path');
+import express from 'express';
+import Datastore from 'nedb';
+import https from 'https';
+import cookieParser from 'cookie-parser';
+import fs from 'fs';
+import bodyParser from 'body-parser';
+import path from 'path';
 
-  const { encrypt, decrypt, scrypt } = require('./crypto');
+import { encrypt, decrypt, scrypt } from './crypto';
+
+export default function() {
+  const app = express();
 
   const User = new Datastore({
     filename: path.join(__dirname, '../../db/user.db'),
