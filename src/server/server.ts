@@ -30,16 +30,6 @@ export default function() {
 
   var httpsServer = https.createServer({ key, cert }, app);
 
-  const cryptoObj = (input, method, password) => {
-    const output = {}
-    for (const [key, value] of Object.entries(input)) {
-      if(key !== '_id' && key !== 'id') {
-        output[key] = method(value, password);
-      }
-    }
-    return output
-  }
-
   app.get('/api/contacts', function(req, res) {
 
       const { cookies: { password } } = req;
@@ -51,12 +41,10 @@ export default function() {
           console.log(err);
           res.sendStatus(500);
         }
-
-        const decrypted = contacts.map((contact) => ({
-          id: contact._id,
-          ...cryptoObj(contact, decrypt, password),
+        const decrypted = contacts.map(({ hash, _id }) => ({
+          ...JSON.parse(decrypt(hash, password)),
+          id: _id,
         }));
-
         res.send(decrypted);
       });
   });
@@ -70,12 +58,7 @@ export default function() {
       Contacts.FindOne({_id: id}, function (err, doc) {
         if (err) console.log(err);
 
-        const decrypted = {};
-
-        for (const [key, value] of Object.entries(doc)) {
-          decrypted[key] = decrypt(value, password);
-        }
-
+        const decrypted = decrypt(doc.hash, password);
         res.send({
           ...JSON.parse(decrypted),
           id: _id,
@@ -89,13 +72,15 @@ export default function() {
 
       if(!contact && !password) return res.sendStatus(400);
 
-      Contacts.insert(cryptoObj(contact, encrypt, password), function (err, { _id }) {
-        if (err) {
-          console.log(err);
-          return res.sendStatus(500);
-        }
-        res.send({ ...contact, id: _id });
-      });
+        const hash = encrypt(JSON.stringify(contact), password);
+
+        Contacts.insert({ hash }, function (err, { _id }) {
+          if (err) {
+            console.log(err);
+            res.sendStatus(500);
+          }
+          res.send({ ...contact, id: _id });
+        });
 
   });
 
@@ -120,7 +105,8 @@ export default function() {
 
       if(!contact && !id && !password) return res.sendStatus(400);
 
-      Contacts.update({_id: id}, cryptoObj(contact, encrypt, password), {}, function(err){
+      const hash = encrypt(JSON.stringify(contact), password);
+      Contacts.update({_id: id}, { hash }, {}, function(err){
         if (err) console.log(err);
 
         res.send(contact);
