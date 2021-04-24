@@ -4,8 +4,8 @@ import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
-import { load, create, update, remove, show } from '../Actions/contacts';
-import { getCurrentContact } from '../Selectors/contacts';
+import { load, create, update, remove, show, search } from '../Actions/contacts';
+import { getCurrentContact, find } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
 
@@ -20,6 +20,7 @@ class Contacts extends Component {
     update,
     remove,
     show,
+    search,
   }
 
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
@@ -32,6 +33,10 @@ class Contacts extends Component {
     const { contacts: [first], show } = this.props;
 
     if(first) show(first.id);
+  }
+
+  state = {
+    found: {}
   }
 
   getFormValues (event) {
@@ -66,6 +71,13 @@ class Contacts extends Component {
     await update({ id, ...this.getFormValues(event) });
     navigate(url);
   }
+
+  search (field, value) {
+    const { contacts } = this.props;
+
+    this.setState({ found: find(field, value)(contacts) })
+  }
+
 
   render () {
     const { contacts, current, remove, show, match: { path, url }, history: { push: navigate } } = this.props;
@@ -103,7 +115,9 @@ class Contacts extends Component {
               <ContactForm onSubmit={this.add} />
             </Route>
           </Switch>
+          <div>{ JSON.stringify(this.state.found) }</div>
           <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
+          <Button type="primary" onClick={() => this.search('name', 'test')}>TEST SEARCH</Button>
         </Content>
       </Layout>
     )
