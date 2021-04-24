@@ -5,6 +5,6 @@ import { show } from '../Actions/contacts';
 
 export default handleActions(
   {
-    [show]: (_, { payload: current }) => ({ current }),
-  }, { cuurent: ''}
+    [show]: (_, { payload: current }) => current,
+  }, ''
 );

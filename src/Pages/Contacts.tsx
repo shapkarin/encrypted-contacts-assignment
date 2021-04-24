@@ -32,17 +32,14 @@ class Contacts extends Component {
 
   async componentDidMount() {
     await this.props.load();
-    // this.setState({ selected: this.props.contacts[0]?.id });
-    // show(current);
-    console.log({ current: this.props.current });
-  }
-
-  state = {
-    selected: '',
+    const { contacts: [first] } = this.props;
+    show(first.id);
   }
 
   add = async (event) => {
     event.preventDefault();
+
+    const { create, history: { push: navigate }, match: { url } } = this.props;
     const {
       target: {
         elements: {
@@ -53,15 +50,16 @@ class Contacts extends Component {
         }
       }
     } = event;
-    const { create } = this.props;
 
     await create({ name, phone, email, address });
-    this.props.history.push(this.props.match.url)
+    navigate(url);
   }
 
   update = async (event) => {
-    const { update, history: { push: navigate }, match: { url } } = this.props;
     event.preventDefault();
+
+    const { update, history: { push: navigate }, match: { url } } = this.props;
+    const { id } = current;
     const {
       target: {
         elements: {
@@ -72,13 +70,12 @@ class Contacts extends Component {
         }
       }
     } = event;
-    await update({ id: this.state.selected, name, phone, email, address });
+    await update({ id, name, phone, email, address });
     navigate(url);
   }
 
   render () {
-    const { contacts, collection, selected, remove, show } = this.props;
-    const current = collection[selected];
+    const { contacts, collection, current, remove, show } = this.props;
 
     return (
       <Layout>
