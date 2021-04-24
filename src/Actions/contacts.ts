@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 
 import request from '../request';
+import { domain, headers } from './constants';
 
 export const actions = {
   create: createAction('contacts/CREATE'),
@@ -8,11 +9,8 @@ export const actions = {
   remove: createAction('contacts/REMOVE'),
   load: createAction('contacts/LOAD'),
   show: createAction('contacts/SHOW_BY_ID'),
-}
-
-const headers = { 'Content-Type': 'application/json' };
-// todo: move at one place only
-const domain = 'https://localhost:3042';
+  search: createAction('contacts/SEACH'),
+};
 
 export const create = (contact) => async (dispatch) => {
   const newContact = await request(`${domain}/api/contacts`, {
@@ -47,3 +45,11 @@ export const load = () => async (dispatch) => {
 };
 
 export const show = actions.show;
+
+// export const search = (field, value) => async (dispatch) => {
+//   const contact = await request(`${domain}/api/contacts/search?field=${field}&value=${value}`);
+//   console.log({ contact });
+//   dispatch(actions.search(contact));
+// };
+
+export const search actions.search;

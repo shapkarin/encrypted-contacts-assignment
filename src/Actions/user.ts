@@ -2,17 +2,13 @@
 import { createAction } from 'redux-actions';
 
 import request from '../request';
+import { domain, headers } from './constants';
 
 export const actions = {
   create: createAction('user/CREATE'),
   check: createAction('user/CHECK'),
   error: createAction('user/ERROR'),
 };
-
-// todo: move at one place only
-const domain = 'https://localhost:3042';
-
-const headers = { 'Content-Type': 'application/json' };
 
 export const create = (password) => async (dispatch) => {
   await request(`${domain}/api/user`, {

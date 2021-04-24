@@ -61,23 +61,17 @@ export default function() {
       });
   });
 
-  app.get('/api/contacts/:id', function(req, res) {
+  app.get('/api/contact/:id', function(req, res) {
 
       const { params: { id }, cookies: { password } } = req;
 
       if(!id && !password) return res.sendStatus(400);
 
-      Contacts.FindOne({_id: id}, function (err, doc) {
+      Contacts.findOne({_id: id}, function (err, doc) {
         if (err) console.log(err);
 
-        const decrypted = {};
-
-        for (const [key, value] of Object.entries(doc)) {
-          decrypted[key] = decrypt(value, password);
-        }
-
         res.send({
-          ...JSON.parse(decrypted),
+          ...JSON.parse(cryptoObj(doc, decrypt, password)),
           id: _id,
         });
       });
@@ -126,6 +120,15 @@ export default function() {
         res.send(contact);
       });
   });
+
+  // not possible beacuse each valie has uniq iv
+  // app.get('/api/contacts/search', function(req, res){
+  //   const { cookies: { password }, query: { field, value } } = req;
+
+  //   Contacts.findOne({ [`${field}.content`]: encrypt(value, password).content }, function (err, contact) {
+  //     console.log(contact);
+  //   });
+  // });
 
   app.post('/api/user', async function(req, res){
 

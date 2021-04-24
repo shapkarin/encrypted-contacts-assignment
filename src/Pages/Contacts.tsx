@@ -4,7 +4,7 @@ import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
-import { load, create, update, remove, show } from '../Actions/contacts';
+import { load, create, update, remove, show, search } from '../Actions/contacts';
 import { getCurrentContact } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
@@ -20,6 +20,7 @@ class Contacts extends Component {
     update,
     remove,
     show,
+    search,
   }
 
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
@@ -104,6 +105,7 @@ class Contacts extends Component {
             </Route>
           </Switch>
           <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
+          <Button type="primary" onClick={() => this.props.search('name', 'test')}>TEST SEARCH</Button>
         </Content>
       </Layout>
     )
