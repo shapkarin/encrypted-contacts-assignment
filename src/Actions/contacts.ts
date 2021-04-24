@@ -21,6 +21,7 @@ export const create = (contact) => async (dispatch) => {
     body: JSON.stringify({ contact }),
   });
   dispatch(actions.create(newContact));
+  dispatch(actions.show(newContact.id));
 };
 
 export const update = (contact) => async (dispatch) => {

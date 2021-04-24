@@ -27,13 +27,14 @@ class Contacts extends Component {
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
     contacts: Object.keys(collection).map(key => collection[key]).sort((a, b) => a.name - b.name),
     collection,
-    current: getCurrentContact({ collection, current })
+    current: getCurrentContact({ collection, current }),
   })
 
   async componentDidMount() {
     await this.props.load();
-    const { contacts: [first] } = this.props;
-    show(first.id);
+    const { contacts: [first], show } = this.props;
+
+    if(first) show(first.id);
   }
 
   add = async (event) => {
@@ -58,8 +59,7 @@ class Contacts extends Component {
   update = async (event) => {
     event.preventDefault();
 
-    const { update, history: { push: navigate }, match: { url } } = this.props;
-    const { id } = current;
+    const { update, current: { id }, history: { push: navigate }, match: { url } } = this.props;
     const {
       target: {
         elements: {
@@ -70,6 +70,7 @@ class Contacts extends Component {
         }
       }
     } = event;
+
     await update({ id, name, phone, email, address });
     navigate(url);
   }
@@ -98,13 +99,7 @@ class Contacts extends Component {
               <Route
                 exact
                 path={this.props.match.path}
-                render={(props) => (
-                  <ContactDetails
-                    {...props}
-                    contact={current}
-                    remove={() => remove(current.id)}
-                  />
-                )}
+                component={ContactDetails}
               />
               <Route
                 path={`${this.props.match.path}/edit`}
