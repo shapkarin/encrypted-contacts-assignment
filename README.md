@@ -34,4 +34,4 @@ Improvements:
 - More tests
 - Styles
 
-To more check the issues and feel free to add.
+To more check [the issues](https://github.com/shapkarin/encrypted-contacts/issues) and feel free [to add](https://github.com/shapkarin/encrypted-contacts/issues/new).
