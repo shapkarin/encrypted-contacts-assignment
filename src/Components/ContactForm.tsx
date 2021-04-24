@@ -11,7 +11,7 @@ const ContactForm = ({ onSubmit, contact: { name, phone, email, address } = {}, 
     <Button htmlType="submit" type="primary">
       { edit ? 'Save' : 'Create' }
     </Button>
-    {edit && <Button type="primary" onClick={() => history.push('/contacts')}>Close</Button>}
+    <Button type="primary" onClick={() => history.push('/contacts')}>Close</Button>
   </form>
 )
 

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { normalize, schema } from 'normalizr';
 
-import { actions } from '../Actions/contact';
+import { actions } from '../Actions/contacts';
 
 const { create, update, remove, load } = actions;
 
@@ -34,6 +34,6 @@ export default handleActions(
         ...contacts,
         ...collection,
       }
-    }
+    },
   }, { }
 );

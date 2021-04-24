@@ -265,6 +265,7 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.7",
+    "reselect": "^4.0.0",
     "source-map-support": "^0.5.19"
   },
   "devEngines": {
