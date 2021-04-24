@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
-import { Typography, Button } from 'antd';
+import { Button } from 'antd';
 
 import { remove } from '../Actions/contacts';
 import { getCurrentContact } from '../Selectors/contacts';
-
-const { Text } = Typography;
 
 const Details = ({ contact, remove, edit, history, match }) => {
   if (contact === undefined) return null;
@@ -18,8 +16,7 @@ const Details = ({ contact, remove, edit, history, match }) => {
           key !== 'id'
           &&
           <>
-            {key}:
-            <Text>{contact[key]}</Text>
+            {key}: {contact[key]}
           </>
         }
       </div>

@@ -27,17 +27,14 @@ class Contacts extends Component {
     current: getCurrentContact({ collection, current }),
   })
 
-  async componentDidMount() {
+  async componentDidMount () {
     await this.props.load();
     const { contacts: [first], show } = this.props;
 
     if(first) show(first.id);
   }
 
-  add = async (event) => {
-    event.preventDefault();
-
-    const { create, history: { push: navigate }, match: { url } } = this.props;
+  getFormValues (event) {
     const {
       target: {
         elements: {
@@ -49,7 +46,15 @@ class Contacts extends Component {
       }
     } = event;
 
-    await create({ name, phone, email, address });
+    return { name, phone, email, address}
+  }
+
+  add = async (event) => {
+    event.preventDefault();
+
+    const { create, history: { push: navigate }, match: { url } } = this.props;
+
+    await create(this.getFormValues(event));
     navigate(url);
   }
 
@@ -57,23 +62,13 @@ class Contacts extends Component {
     event.preventDefault();
 
     const { update, current: { id }, history: { push: navigate }, match: { url } } = this.props;
-    const {
-      target: {
-        elements: {
-          name: { value: name },
-          phone: { value: phone },
-          email: { value: email },
-          address: { value: address }
-        }
-      }
-    } = event;
 
-    await update({ id, name, phone, email, address });
+    await update({ id, ...this.getFormValues(event) });
     navigate(url);
   }
 
   render () {
-    const { contacts, current, remove, show } = this.props;
+    const { contacts, current, remove, show, match: { path, url }, history: { push: navigate } } = this.props;
 
     return (
       <Layout>
@@ -94,28 +89,21 @@ class Contacts extends Component {
           <Switch>
             <Route
               exact
-              path={this.props.match.path}
+              path={path}
               component={ContactDetails}
             />
-            <Route
-              path={`${this.props.match.path}/edit`}
-              render={(props) => (
-                <ContactForm
-                  {...props}
-                  onSubmit={this.update}
-                  contact={current}
-                  edit={true}
-                />
-              )}
-            />
-            <Route
-              path={`${this.props.match.path}/add`}
-              render={(props) => (
-                <ContactForm {...props} onSubmit={this.add} />
-              )}
-            />
+            <Route path={`${path}/edit`}>
+              <ContactForm
+                onSubmit={this.update}
+                contact={current}
+                edit={true}
+              />
+            </Route>
+            <Route path={`${path}/add`}>
+              <ContactForm onSubmit={this.add} />
+            </Route>
           </Switch>
-          <Button type="primary" onClick={() => this.props.history.push(`${this.props.match.url}/add`)}>Add new contact</Button>
+          <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
         </Content>
       </Layout>
     )
