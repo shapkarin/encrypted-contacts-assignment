@@ -26,7 +26,6 @@ class Contacts extends Component {
 
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
     contacts: Object.keys(collection).map(key => collection[key]).sort((a, b) => a.name - b.name),
-    collection,
     current: getCurrentContact({ collection, current }),
   })
 
@@ -76,7 +75,7 @@ class Contacts extends Component {
   }
 
   render () {
-    const { contacts, collection, current, remove, show } = this.props;
+    const { contacts, current, remove, show } = this.props;
 
     return (
       <Layout>
