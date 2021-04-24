@@ -2,8 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 
-import { encrypt, decrypt, scrypt } from '../server/crypto';
-import { create, update, remove } from '../Actions';
+import { encrypt, decrypt, scrypt } from '../../server/crypto';
+import { create, update, remove } from '../../Actions';
 
 describe('Test crypto module', () => {
   const data = 'Some data';
