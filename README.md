@@ -6,7 +6,7 @@ yarn install
 ```
 
 Start the app:
-You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. 
+You need to generate sertificates and place it to the `./sslcert` folder to make an app works well. You can follow [that instruction](https://letsencrypt.org/docs/certificates-for-localhost/).
 ```sh
 npm start
 # or
