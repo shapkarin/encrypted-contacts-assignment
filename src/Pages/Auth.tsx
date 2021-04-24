@@ -65,6 +65,7 @@ class Auth extends Component {
     if(!this.state.alive) return null;
 
     const { isFirstRun } = this.state;
+    const { error } = this.props;
 
     return (
       <Space direction="vertical">
@@ -93,7 +94,7 @@ class Auth extends Component {
                 { isFirstRun ? 'Create' : 'Login' }
               </Button>
             </Col>
-            {this.props.error.length > 0 && <Text type="danger">{ this.props.error }</Text>}
+            {error.length > 0 && <Text type="danger">{ error }</Text>}
           </Row>
           <Button
             type="primary"

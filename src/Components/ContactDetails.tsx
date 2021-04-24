@@ -22,8 +22,8 @@ const Details = ({ contact, remove, edit, history, match }) => {
       </div>
     ))}
     <div>
-      <Button type="primary" onClick={() => remove(contact.id)}>Remove</Button>
       <Button type="primary" onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>
+      <Button type="primary" onClick={() => remove(contact.id)}>Remove</Button>
     </div>
   </div>
 };
