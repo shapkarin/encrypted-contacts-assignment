@@ -46,7 +46,7 @@ class Contacts extends Component {
       }
     } = event;
 
-    return { name, phone, email, address}
+    return { name, phone, email, address };
   }
 
   add = async (event) => {

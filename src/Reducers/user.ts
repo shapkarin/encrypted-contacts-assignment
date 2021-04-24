@@ -1,5 +1,4 @@
 import { handleActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
 
 import { actions } from '../Actions/user';
 
