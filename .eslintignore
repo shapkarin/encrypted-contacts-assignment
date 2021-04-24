@@ -32,11 +32,11 @@ node_modules
 
 # App packaged
 release
-src/*.main.prod.js
-src/main.prod.js
-src/main.prod.js.map
-src/renderer.prod.js
-src/renderer.prod.js.map
+src/Server/*.main.prod.js
+src/Server/main.prod.js
+src/Server/main.prod.js.map
+src/Server/renderer.prod.js
+src/Server/renderer.prod.js.map
 src/style.css
 src/style.css.map
 dist
