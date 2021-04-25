@@ -4,8 +4,8 @@ import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 
-import { load, create, update, remove, show } from '../Actions/contacts';
-import { getCurrentContact } from '../Selectors/contacts';
+import { load, create, update, remove, show, search } from '../Actions/contacts';
+import { getCurrentContact, find } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
 
@@ -20,6 +20,7 @@ class Contacts extends Component {
     update,
     remove,
     show,
+    search,
   }
 
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
@@ -32,6 +33,10 @@ class Contacts extends Component {
     const { contacts: [first], show } = this.props;
 
     if(first) show(first.id);
+  }
+
+  state = {
+    found: [],
   }
 
   getFormValues (event) {
@@ -65,6 +70,14 @@ class Contacts extends Component {
 
     await update({ id, ...this.getFormValues(event) });
     navigate(url);
+  }
+
+  search = (value) => {
+    event.preventDefault();
+
+    const { target: { elements: { query: { value: query } } } } = event;
+
+    this.setState({ found: find(query)(this.props.contacts) })
   }
 
   render () {
@@ -104,6 +117,31 @@ class Contacts extends Component {
             </Route>
           </Switch>
           <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
+
+          <div>
+            {
+              this.state.found.map(contact => (
+                <div style={{marginBottom: 20}}>
+                  { Object.keys(contact).map((key) => (
+                    <div key={key}>
+                      {
+                        key !== 'id'
+                        &&
+                        <>
+                          {key}: {contact[key]}
+                        </>
+                      }
+                    </div>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
+          <form onSubmit={this.search}>
+            <div></div>
+            <input id="query" />
+            <Button htmlType="submit" type="primary">TEST SEARCH</Button>
+          </form>
         </Content>
       </Layout>
     )
