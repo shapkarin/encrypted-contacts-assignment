@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Switch, Router, Route, Link, withRouter } from 'react-router-dom';
+import { Switch, Router, Route, Link, NavLink, withRouter } from 'react-router-dom';
 import connect from 'react-redux-connect';
-import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider } from 'antd';
-import { LockFilled } from '@ant-design/icons';
+import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider, Menu, Breadcrumb, List } from 'antd';
 
-import { load, create, update, remove, show, search } from '../Actions/contacts';
+import { load, create, update, remove, show } from '../Actions/contacts';
 import { getCurrentContact, find } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
+import Search from '../Components/Search';
 
 const { Title, Text } = Typography;
 const { Header, Sider, Content, Footer } = Layout;
@@ -20,7 +20,6 @@ class Contacts extends Component {
     update,
     remove,
     show,
-    search,
   }
 
   static mapStateToProps = ({ contacts: { collection, current }}) => ({
@@ -73,76 +72,65 @@ class Contacts extends Component {
   }
 
   search = (value) => {
-    event.preventDefault();
-
-    const { target: { elements: { query: { value: query } } } } = event;
-
-    this.setState({ found: find(query)(this.props.contacts) })
+    this.setState({ found: find(value)(this.props.contacts) }, () => {
+      this.props.history.push(`${this.props.match.path}/search/`)
+    })
   }
 
   render () {
-    const { contacts, current, remove, show, match: { path, url }, history: { push: navigate } } = this.props;
+    const { contacts, current, remove, show, match: { path, url } } = this.props;
 
     return (
-      <Layout>
-        <Sider theme="light">
-          <aside>
-            {contacts.map(({ name, id }) => (
-              <div
-                key={id}
-                onClick={() => show(id)}
-                style={{ cursor: 'pointer' }}
-              >
-              { name }
-            </div>
-            ))}
-          </aside>
-        </Sider>
-        <Content style={{background: 'white'}}>
-          <Switch>
-            <Route
-              exact
-              path={path}
-              component={ContactDetails}
+      <Layout className="layout">
+        <Header>
+          <Input.Search
+            placeholder="Search contact"
+            allowClear
+            enterButton="Search"
+            size="large"
+            onSearch={this.search}
+            style={{width: 250, marginTop: 10, marginRight: 20}}
+          />
+          <NavLink to={`${url}/add`} exact className="link" activeClassName="activeLink">Add contact</NavLink>
+        </Header>
+        <Layout>
+          <Sider theme="light">
+            <List
+              size="large"
+              header={<div>My contacts:</div>}
+              bordered
+              dataSource={contacts}
+              renderItem={({ name, id }) => (
+                <List.Item style={{ cursor: 'pointer' }} key={id} onClick={() => show(id)}>{name}</List.Item>
+              )}
             />
-            <Route path={`${path}/edit`}>
-              <ContactForm
-                onSubmit={this.update}
-                contact={current}
-                edit={true}
-              />
-            </Route>
-            <Route path={`${path}/add`}>
-              <ContactForm onSubmit={this.add} />
-            </Route>
-          </Switch>
-          <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
-
-          <div>
-            {
-              this.state.found.map(contact => (
-                <div style={{marginBottom: 20}}>
-                  { Object.keys(contact).map((key) => (
-                    <div key={key}>
-                      {
-                        key !== 'id'
-                        &&
-                        <>
-                          {key}: {contact[key]}
-                        </>
-                      }
-                    </div>
-                  ))}
-                </div>
-              ))
-            }
-          </div>
-          <form onSubmit={this.search}>
-            <div></div>
-            <input id="query" />
-            <Button htmlType="submit" type="primary">TEST SEARCH</Button>
-          </form>
-        </Content>
+          </Sider>
+          <Content style={{ padding: '0 50px' }}>
+            <div style={{ padding: 10 }}>
+              <Switch>
+                <Route
+                  exact
+                  path={path}
+                  component={ContactDetails}
+                />
+                <Route path={`${path}/edit`}>
+                  <ContactForm
+                    onSubmit={this.update}
+                    contact={current}
+                    edit={true}
+                  />
+                </Route>
+                <Route path={`${path}/add`}>
+                  <ContactForm onSubmit={this.add} />
+                </Route>
+                <Route path={`${path}/search/`}>
+                  <Search contacts={this.state.found}/>
+                </Route>
+              </Switch>
+            </div>
+          </Content>
+        </Layout>
+        <Footer>Encrypted contacts v1</Footer>
       </Layout>
     )
   }

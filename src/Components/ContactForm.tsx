@@ -7,7 +7,7 @@ const ContactForm = ({ onSubmit, contact: { name, phone, email, address } = {}, 
     name: <input id="name" type='text' defaultValue={name}/><br/>
     phone: <input id="phone" type='text' defaultValue={phone}/><br/>
     email: <input id="email" type='text' defaultValue={email}/><br/>
-    address: <input id="address" type='text' defaultValue={address}/>
+    address: <input id="address" type='text' defaultValue={address}/><br/>
     <Button htmlType="submit" type="primary">
       { edit ? 'Save' : 'Create' }
     </Button>
