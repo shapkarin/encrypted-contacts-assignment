@@ -118,8 +118,27 @@ class Contacts extends Component {
           </Switch>
           <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
 
+          <div>
+            {
+              this.state.found.map(contact => (
+                <div style={{marginBottom: 20}}>
+                  { Object.keys(contact).map((key) => (
+                    <div key={key}>
+                      {
+                        key !== 'id'
+                        &&
+                        <>
+                          {key}: {contact[key]}
+                        </>
+                      }
+                    </div>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
           <form onSubmit={this.search}>
-            <div>{ JSON.stringify(this.state.found.map(item => item)) }</div>
+            <div></div>
             <input id="query" />
             <Button htmlType="submit" type="primary">TEST SEARCH</Button>
           </form>

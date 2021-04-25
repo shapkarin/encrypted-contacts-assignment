@@ -10,7 +10,7 @@ export const find = (value) => createSelector(
   contacts => contacts,
   (contacts) => {
     const found = contacts.filter(contact =>
-      Object.values(contact).join(' ').includes('tes')
+      Object.values(contact).join(' ').includes(value)
     )
     return found;
   }
