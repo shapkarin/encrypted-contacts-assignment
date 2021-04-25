@@ -3,3 +3,11 @@
 body {
   padding: 15px;
 }
+
+.link {
+  color: white;
+}
+
+.activeLink {
+  text-decoration: underline;
+}
