@@ -8,7 +8,6 @@ export const actions = {
   remove: createAction('contacts/REMOVE'),
   load: createAction('contacts/LOAD'),
   show: createAction('contacts/SHOW_BY_ID'),
-  search: createAction('contacts/SEARCH'),
 }
 
 const headers = { 'Content-Type': 'application/json' };
@@ -48,5 +47,3 @@ export const load = () => async (dispatch) => {
 };
 
 export const show = actions.show;
-
-export const search = actions.search;

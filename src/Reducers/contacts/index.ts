@@ -5,5 +5,5 @@ import current from './current';
 
 export default combineReducers({
   collection,
-  current
+  current,
 });

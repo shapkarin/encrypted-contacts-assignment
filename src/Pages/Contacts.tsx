@@ -36,7 +36,7 @@ class Contacts extends Component {
   }
 
   state = {
-    found: {}
+    found: [],
   }
 
   getFormValues (event) {
@@ -72,12 +72,13 @@ class Contacts extends Component {
     navigate(url);
   }
 
-  search (field, value) {
-    const { contacts } = this.props;
+  search = (value) => {
+    event.preventDefault();
 
-    this.setState({ found: find(field, value)(contacts) })
+    const { target: { elements: { query: { value: query } } } } = event;
+
+    this.setState({ found: find(query)(this.props.contacts) })
   }
-
 
   render () {
     const { contacts, current, remove, show, match: { path, url }, history: { push: navigate } } = this.props;
@@ -115,9 +116,13 @@ class Contacts extends Component {
               <ContactForm onSubmit={this.add} />
             </Route>
           </Switch>
-          <div>{ JSON.stringify(this.state.found) }</div>
           <Button type="primary" onClick={() => navigate(`${url}/add`)}>Add new contact</Button>
-          <Button type="primary" onClick={() => this.search('name', 'test')}>TEST SEARCH</Button>
+
+          <form onSubmit={this.search}>
+            <div>{ JSON.stringify(this.state.found.map(item => item)) }</div>
+            <input id="query" />
+            <Button htmlType="submit" type="primary">TEST SEARCH</Button>
+          </form>
         </Content>
       </Layout>
     )

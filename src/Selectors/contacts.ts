@@ -1,5 +1,4 @@
-// todo
-
+// TODO
 import { createSelector } from 'reselect'
 
 export const getCurrentContact = createSelector(
@@ -7,7 +6,12 @@ export const getCurrentContact = createSelector(
   (contacts, id) => contacts[id]
 );
 
-export const find = (field, value) => createSelector(
+export const find = (value) => createSelector(
   contacts => contacts,
-  (contacts) => contacts.find(contact => contact[field].includes(value))
+  (contacts) => {
+    const found = contacts.filter(contact =>
+      Object.values(contact).join(' ').includes('tes')
+    )
+    return found;
+  }
 );
