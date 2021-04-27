@@ -10,7 +10,7 @@ export const find = (value) => createSelector(
   contacts => contacts,
   (contacts) => {
     const found = contacts.filter(contact =>
-      Object.values(contact).join(' ').includes(value)
+      Object.values(contact).join('').toLocaleLowerCase().includes(value)
     )
     return found;
   }
