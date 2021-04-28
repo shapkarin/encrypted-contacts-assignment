@@ -3,7 +3,7 @@ import { Switch, Router, Route, Link, NavLink, withRouter } from 'react-router-d
 import connect from 'react-redux-connect';
 import { Typography, Space, Input, Tooltip, Button, Row, Col, Layout, Divider, Menu, Breadcrumb, List } from 'antd';
 
-import { load, create, update, remove, show } from '../Actions/contacts';
+import { load, create, update, show } from '../Actions/contacts';
 import { getCurrentContact, find } from '../Selectors/contacts';
 import ContactDetails from '../Components/ContactDetails';
 import ContactForm from '../Components/ContactForm';
@@ -18,7 +18,6 @@ class Contacts extends Component {
     load,
     create,
     update,
-    remove,
     show,
   }
 
@@ -78,7 +77,7 @@ class Contacts extends Component {
   }
 
   render () {
-    const { contacts, current, remove, show, match: { path, url } } = this.props;
+    const { contacts, current, show, match: { path, url } } = this.props;
 
     return (
       <Layout className="layout">
