@@ -16,7 +16,8 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
-import server from './server';
+import { httpsServer } from './server';
+
 
 export default class AppUpdater {
   constructor() {
@@ -126,16 +127,14 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app.whenReady().then(() => {
+  httpsServer.listen(3042, createWindow);
+}).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
-});
-
-app.on('ready', function() {
-  server();
 });
 
 ipcMain.on('quit', () => {
