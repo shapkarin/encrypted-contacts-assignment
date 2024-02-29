@@ -23,9 +23,11 @@ yarn start
 
 
 This app can be grow in web service. The currently for that needed:
-- separate contacts by users
+- add CSRF-token because of cookie
+- In additon store pass as JWT in additon to implemented httpOnly cookie
 - add HMAC because the data now goes throw the https and the global network
 - responced data data at create and update can be replaced with only statuses
+- separate contacts by users
 - change db
 
 Improvements:
